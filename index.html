@@ -20,6 +20,41 @@
 
 <a class="skip" href="#main">Skip to content</a>
 
+<section class="gate" id="gate" aria-label="Welcome to Hotel Natraj &amp; Resort">
+  <div class="gate__stage">
+    <div class="gate__beyond">
+      <img src="https://natrajhotel.co.in/images/uploads/586/3468_738hotel_natraj_resort_img__7_.jpg" alt="" fetchpriority="high">
+      <div class="gate__welcome">
+        <p class="gate__gu" lang="gu">પધારો</p>
+        <p class="gate__gloss"><i>padhāro</i> — come in, you're welcome here</p>
+      </div>
+    </div>
+    <div class="gate__world">
+      <div class="gate__doorway">
+        <div class="gate__frame" title="Open the doors">
+          <div class="leaf leaf--l">
+            <div class="leaf__panels"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="leaf__ring"></span>
+          </div>
+          <div class="leaf leaf--r">
+            <div class="leaf__panels"><i></i><i></i><i></i><i></i><i></i><i></i></div>
+            <span class="leaf__ring"></span>
+          </div>
+        </div>
+        <div class="gate__floor"><div class="gate__rangoli" id="floorRangoli"></div></div>
+        <div class="gate__lintel"></div>
+        <div class="gate__toran"></div>
+        <span class="gate__shubh gate__shubh--l" lang="gu">શુભ</span>
+        <span class="gate__shubh gate__shubh--r" lang="gu">લાભ</span>
+        <div class="diya diya--l"><span class="diya__flame"></span></div>
+        <div class="diya diya--r"><span class="diya__flame"></span></div>
+      </div>
+    </div>
+    <p class="gate__hint"><span>Scroll to step inside</span></p>
+    <a class="gate__skip" href="#main">Skip</a>
+  </div>
+</section>
+
 <div class="topline">
   <div class="wrap topline__in">
     <span>Delwad · Ta. Mansa · Dist. Gandhinagar</span>
@@ -39,6 +74,7 @@
       <a href="#resort">The resort</a>
       <a href="#weddings">Weddings</a>
       <a href="#gallery">Photos</a>
+      <a href="#rangoli">Rangoli</a>
       <a href="#nearby">Getting here</a>
       <a class="nav__cta" href="https://wa.me/917802903232?text=Hello%20Hotel%20Natraj%20%26%20Resort%2C%20I%20would%20like%20to%20enquire%20about%20a%20stay.">Enquire</a>
     </nav>
@@ -53,9 +89,7 @@
   <section class="hero">
     <div class="wrap hero__in">
       <div class="hero__text">
-        <p class="hero__gu" lang="gu">પધારો</p>
-        <p class="hero__gloss"><i>padhāro</i> — come in, you're welcome here</p>
-        <h1>Hotel Natraj &amp;&nbsp;Resort</h1>
+        <h1 class="hero__h1">Hotel Natraj &amp;&nbsp;Resort</h1>
         <p class="hero__tag">Experience the Glory of Nature</p>
         <p class="hero__lede">A cottage resort on the Gandhinagar–Mahudi highway at Delwad. Rooms set around a swimming pool, a restaurant, games for the children, and a banquet hall and lawn for weddings.</p>
         <div class="hero__btns">
@@ -243,6 +277,46 @@
     </div>
   </section>
 
+  <!-- Rangoli -->
+  <section class="rang" id="rangoli">
+    <div class="wrap rang__in">
+      <div class="rang__text">
+        <h2 class="kicker"><span lang="gu">રંગોળી</span> Your turn</h2>
+        <p class="sechead__title">Draw a rangoli for our doorstep</p>
+        <p>At Diwali, and before every wedding, someone sits at the entrance with little bowls of coloured powder and makes a rangoli. Try it here. Draw anywhere on the floor and your strokes are mirrored all the way round.</p>
+
+        <fieldset class="rang__colors">
+          <legend>Colour</legend>
+          <label><input type="radio" name="rc" value="#f6f0e2" checked><span style="--c:#f6f0e2"></span>Chuna white</label>
+          <label><input type="radio" name="rc" value="#f2ad1d"><span style="--c:#f2ad1d"></span>Haldi</label>
+          <label><input type="radio" name="rc" value="#ee6a1c"><span style="--c:#ee6a1c"></span>Kesari</label>
+          <label><input type="radio" name="rc" value="#d42a3c"><span style="--c:#d42a3c"></span>Kumkum</label>
+          <label><input type="radio" name="rc" value="#e2558e"><span style="--c:#e2558e"></span>Gulabi</label>
+          <label><input type="radio" name="rc" value="#3a9a48"><span style="--c:#3a9a48"></span>Mehndi</label>
+          <label><input type="radio" name="rc" value="#2f63c4"><span style="--c:#2f63c4"></span>Neel</label>
+        </fieldset>
+
+        <div class="rang__opts">
+          <label>Line <select id="rangSize"><option value="3">Fine</option><option value="6" selected>Medium</option><option value="11">Thick</option></select></label>
+          <label>Mirror <select id="rangSym"><option value="6">6 ways</option><option value="8" selected>8 ways</option><option value="12">12 ways</option></select></label>
+        </div>
+
+        <div class="rang__btns">
+          <button class="btn btn--red" id="rangAuto">Make one for me</button>
+          <button class="btn btn--line" id="rangClear">Sweep the floor</button>
+        </div>
+        <div class="rang__btns rang__btns--small">
+          <button id="rangSave">Save picture</button>
+          <button id="rangShare" hidden>Share</button>
+        </div>
+      </div>
+      <div class="rang__floor">
+        <canvas id="rangCanvas" aria-label="Rangoli drawing floor. Draw with your mouse or finger."></canvas>
+        <p class="rang__tip" id="rangTip">Draw here</p>
+      </div>
+    </div>
+  </section>
+
   <!-- Gallery -->
   <section class="gal wrap" id="gallery">
     <div class="sechead">
@@ -321,6 +395,8 @@
   <a href="https://wa.me/917802903232?text=Hello%20Hotel%20Natraj%20%26%20Resort%2C%20I%20would%20like%20to%20enquire%20about%20a%20stay.">WhatsApp</a>
 </div>
 
+<script src="js/gate.js"></script>
+<script src="js/rangoli.js"></script>
 <script src="js/main.js"></script>
 </body>
 </html>
