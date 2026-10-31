@@ -93,8 +93,8 @@ function tiles(n) {
 
 function courtyardGround() {
   return canvasTex(512, 512, (g, w, h) => {
-    g.fillStyle = '#5b5a34'; g.fillRect(0, 0, w, h);
-    speckle(g, w, h, 9000, ['#4a4f2a', '#6b6a3c', '#7a6a45', '#3f4423'], 2.2);
+    g.fillStyle = '#3f5a2a'; g.fillRect(0, 0, w, h);
+    speckle(g, w, h, 9000, ['#36502a', '#4b6a34', '#557a3a', '#2f4522'], 2.2);
   }, { repeat: [14, 14] });
 }
 
@@ -252,7 +252,7 @@ function start() {
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, mobile ? 1.5 : 1.75));
   renderer.outputColorSpace = THREE.SRGBColorSpace;
   renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = .95;
+  renderer.toneMappingExposure = 1.1;
   renderer.shadowMap.enabled = true;
   renderer.shadowMap.type = THREE.PCFSoftShadowMap;
   const canvas = renderer.domElement;
@@ -260,22 +260,23 @@ function start() {
   canvas.setAttribute('aria-hidden', 'true');
 
   const scene = new THREE.Scene();
-  scene.fog = new THREE.Fog(0x7a5a52, 22, 70);
+  scene.fog = new THREE.Fog(0x1a1626, 30, 95);
   const camera = new THREE.PerspectiveCamera(45, 1, .05, 400);
 
   // Sky dome: deep indigo overhead, saffron at the horizon, a low sun behind the courtyard.
   const skyMat = new THREE.ShaderMaterial({
     side: THREE.BackSide, depthWrite: false, fog: false,
-    uniforms: { sun: { value: new THREE.Vector3(-.25, .06, -1).normalize() } },
+    uniforms: {},
     vertexShader: 'varying vec3 d; void main(){ d = normalize(position); gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.); }',
-    fragmentShader: `varying vec3 d; uniform vec3 sun;
+    fragmentShader: `varying vec3 d;
       void main(){
         float h = d.y;
-        vec3 top = vec3(.09,.10,.24), mid = vec3(.52,.27,.28), hor = vec3(.90,.55,.32);
+        vec3 top = vec3(.012,.018,.06), mid = vec3(.05,.05,.14), hor = vec3(.26,.13,.16);
         vec3 c = mix(hor, mid, smoothstep(.0,.18,h));
         c = mix(c, top, smoothstep(.15,.6,h));
-        float s = max(dot(d, sun), 0.);
-        c += vec3(1.,.75,.4) * pow(s, 60.) * .6 + vec3(1.,.55,.25) * pow(s, 8.) * .12;
+        vec3 q = floor(d * 380.);
+        float st = fract(sin(dot(q, vec3(12.9898,78.233,45.164))) * 43758.5453);
+        c += vec3(.9,.92,1.) * step(.9965, st) * smoothstep(.05,.4,h) * .9;
         c = mix(c, vec3(.35,.22,.2), smoothstep(0.,-.15,h));
         gl_FragColor = vec4(c,1.);
       }`
@@ -288,19 +289,19 @@ function start() {
   const envScene = new THREE.Scene();
   envScene.add(new THREE.Mesh(new THREE.SphereGeometry(10, 32, 16), skyMat));
   scene.environment = pm.fromScene(envScene, .04).texture;
-  scene.environmentIntensity = .55;
+  scene.environmentIntensity = .35;
 
   // Lights
-  scene.add(new THREE.HemisphereLight(0xffd6ae, 0x3a2418, .7));
-  const sun = new THREE.DirectionalLight(0xffa860, 1.8);
-  sun.position.set(8, 9, -34);
-  sun.target.position.set(0, 0, -6);
+  scene.add(new THREE.HemisphereLight(0x6d7bb0, 0x2a1810, .55));
+  const sun = new THREE.DirectionalLight(0x9fb2e8, .55);  // moonlight
+  sun.position.set(-14, 22, 10);
+  sun.target.position.set(0, 0, -12);
   sun.castShadow = true;
   sun.shadow.mapSize.set(mobile ? 1024 : 2048, mobile ? 1024 : 2048);
-  Object.assign(sun.shadow.camera, { left: -22, right: 22, top: 22, bottom: -22, near: 1, far: 80 });
+  Object.assign(sun.shadow.camera, { left: -30, right: 30, top: 30, bottom: -30, near: 1, far: 90 });
   sun.shadow.bias = -.0005;
   scene.add(sun, sun.target);
-  const front = new THREE.DirectionalLight(0xffe2c4, .9);
+  const front = new THREE.DirectionalLight(0xffd2a0, .35);
   front.position.set(-4, 6, 12);
   scene.add(front);
 
@@ -326,7 +327,7 @@ function start() {
   scene.add(rg);
 
   /* --- wall with the doorway cut out --- */
-  const DW = 1.7, DH = 2.7, T = .5, WH = 5.2, WW = 16;
+  const DW = 1.7, DH = 2.7, T = .5, WH = 4.0, WW = 30;
   const wallMat = new THREE.MeshStandardMaterial({ map: limewash(), roughness: .95 });
   const wallPiece = (w, h, x, y) => {
     const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, T), wallMat);
@@ -456,51 +457,189 @@ function start() {
   };
   addDiya(-(DW / 2 + .45), .75, true);
   addDiya(DW / 2 + .45, .75, true);
-  // a row of small ones along the inside path, for the walk in
-  for (let i = 0; i < 6; i++) { addDiya(-1.05, -1.6 - i * 1.4, i % 3 === 0); addDiya(1.05, -1.6 - i * 1.4, false); }
+  // diyas around the rangoli, and a row along the path to the building
+  for (let i = 0; i < 12; i++) {
+    const a = i / 12 * Math.PI * 2;
+    addDiya(Math.cos(a) * 1.22, 1.85 + Math.sin(a) * 1.22, false);
+  }
+  for (let i = 0; i < 13; i++) { addDiya(-1.15, -1.6 - i * 1.6, !mobile && i % 5 === 2); addDiya(1.15, -1.6 - i * 1.6, false); }
 
-  /* --- courtyard: path, pool, cottages, neem trees, festoon lights --- */
-  const pathM = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 8), new THREE.MeshStandardMaterial({ map: stonePath(), roughness: .9 }));
-  pathM.rotation.x = -Math.PI / 2; pathM.position.set(0, .006, -4.4); pathM.receiveShadow = true; scene.add(pathM);
-
-  const poolZ = -12;
-  const cope = new THREE.MeshStandardMaterial({ color: 0xd9ccb0, roughness: .7 });
-  [[7.4, .5, 0, -2.25], [7.4, .5, 0, 2.25], [.5, 4, -3.45, 0], [.5, 4, 3.45, 0]].forEach(([w, d, x, z]) => {
-    const b = new THREE.Mesh(new THREE.BoxGeometry(w, .14, d), cope);
-    b.position.set(x, .07, poolZ + z); b.receiveShadow = b.castShadow = true; scene.add(b);
-  });
-  const water = new THREE.Mesh(new THREE.PlaneGeometry(6.4, 4),
-    new THREE.MeshStandardMaterial({ color: 0x1b5f6a, roughness: .38, metalness: 0, envMapIntensity: .7 }));
-  water.rotation.x = -Math.PI / 2; water.position.set(0, .05, poolZ); scene.add(water);
-
-  const lime = new THREE.MeshStandardMaterial({ map: limewash(), roughness: .95 });
-  const tileRoof = new THREE.MeshStandardMaterial({ color: 0x9c4a2c, roughness: .8, flatShading: true });
-  const lit = new THREE.MeshStandardMaterial({ color: 0x2a1a10, emissive: 0xffa94d, emissiveIntensity: 2.2 });
-  const doorDark = new THREE.MeshStandardMaterial({ color: 0x3c2414, roughness: .8 });
-  const cottage = (x, z, rot, s = 1) => {
-    const g = new THREE.Group(); g.position.set(x, 0, z); g.rotation.y = rot; g.scale.setScalar(s);
-    const body = new THREE.Mesh(new THREE.BoxGeometry(3.2, 2.2, 2.6), lime);
-    body.position.y = 1.1; body.castShadow = body.receiveShadow = true;
-    const roof = new THREE.Mesh(new THREE.ConeGeometry(2.55, 1.4, 4, 1), tileRoof);
-    roof.rotation.y = Math.PI / 4; roof.scale.set(1.15, 1, .95); roof.position.y = 2.2 + .7; roof.castShadow = true;
-    const plinth = new THREE.Mesh(new THREE.BoxGeometry(3.6, .3, 3), new THREE.MeshStandardMaterial({ color: 0x8a3524, roughness: .8 }));
-    plinth.position.y = .15; plinth.receiveShadow = true;
-    const door = new THREE.Mesh(new THREE.PlaneGeometry(.75, 1.5), doorDark); door.position.set(0, 1.05, 1.301);
-    const w1 = new THREE.Mesh(new THREE.PlaneGeometry(.5, .55), lit); w1.position.set(-1, 1.3, 1.301);
-    const w2 = w1.clone(); w2.position.x = 1;
-    const band = new THREE.Mesh(new THREE.BoxGeometry(3.22, .14, 2.62), new THREE.MeshStandardMaterial({ color: 0x9b2b1e, roughness: .8 }));
-    band.position.y = 2.1;
-    g.add(body, roof, plinth, door, w1, w2, band);
-    scene.add(g);
+  /* =========================================================
+     Hotel Natraj & Resort, modelled from a photo of the property:
+     two-storey block with mustard pillars, Rajasthani arched railing
+     on the roof, a domed chhatri, gold carved panels by the entrance,
+     an arcaded wing on the left, the pool and chhatri lamps on the right,
+     the high-mast light and the big lawn in front.
+     ========================================================= */
+  const BZ = -26;            // front face of the main block
+  const BW = 20, BD = 10, GF = 4, FF = 3.6, BH = GF + FF;
+  const cream = new THREE.MeshStandardMaterial({ map: limewash(), color: 0xe9dcc6, roughness: .9 });
+  const ochre = new THREE.MeshStandardMaterial({ color: 0xd99a2b, roughness: .6 });
+  const maroon = new THREE.MeshStandardMaterial({ color: 0x8e2a1d, roughness: .7 });
+  const glassLit = new THREE.MeshStandardMaterial({ color: 0x1a1008, emissive: 0xffb05a, emissiveIntensity: .9, roughness: .3 });
+  const glassDim = new THREE.MeshStandardMaterial({ color: 0x141820, emissive: 0xffa040, emissiveIntensity: .35, roughness: .2, metalness: .3 });
+  const frameW = new THREE.MeshStandardMaterial({ color: 0xf4efe6, roughness: .6 });
+  const add = (geo, mat, x, y, z, shadow = true) => {
+    const m = new THREE.Mesh(geo, mat); m.position.set(x, y, z);
+    if (shadow) { m.castShadow = true; m.receiveShadow = true; }
+    scene.add(m); return m;
   };
-  cottage(-7.2, -10.5, Math.PI / 2.4);
-  cottage(7.2, -10.5, -Math.PI / 2.4);
-  cottage(-5.6, -18, Math.PI / 6);
-  cottage(5.6, -18, -Math.PI / 6);
-  cottage(0, -20.5, 0, 1.1);
 
-  const bark = new THREE.MeshStandardMaterial({ color: 0x4a3426, roughness: 1 });
-  const leafM = [0x3b5326, 0x46602c, 0x31481f].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: .9, flatShading: true }));
+  // lawn path
+  const pathM = new THREE.Mesh(new THREE.PlaneGeometry(1.8, 26), new THREE.MeshStandardMaterial({ map: stonePath(), roughness: .9 }));
+  pathM.material.map.repeat.set(1, 18);
+  pathM.rotation.x = -Math.PI / 2; pathM.position.set(0, .006, -13); pathM.receiveShadow = true; scene.add(pathM);
+
+  // main block
+  add(new THREE.BoxGeometry(BW, BH, BD), cream, 0, BH / 2, BZ - BD / 2);
+  add(new THREE.BoxGeometry(BW + .6, .35, BD + .6), ochre, 0, GF, BZ - BD / 2);          // floor band
+  add(new THREE.BoxGeometry(BW + .4, .3, BD + .4), ochre, 0, BH + .15, BZ - BD / 2);     // roof band
+  add(new THREE.BoxGeometry(BW + 1, .4, BD + 1), new THREE.MeshStandardMaterial({ color: 0x9a8a74, roughness: .9 }), 0, .2, BZ - BD / 2); // plinth
+  // entrance canopy
+  add(new THREE.BoxGeometry(8, .3, 2.2), ochre, 0, GF - .25, BZ + 1.1);
+  // mustard pillars running full height
+  [-5.4, -1.9, 1.9, 5.4].forEach(x => add(new THREE.BoxGeometry(.6, BH, .6), ochre, x, BH / 2, BZ + .3));
+  // gold carved panels either side of the entrance
+  const goldPanel = canvasTex(256, 256, (g, w, h) => {
+    const gr = g.createLinearGradient(0, 0, w, h); gr.addColorStop(0, '#e3b25a'); gr.addColorStop(.5, '#b8862f'); gr.addColorStop(1, '#8a5f1c');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#6a4512'; g.lineWidth = 6; g.strokeRect(10, 10, w - 20, h - 20);
+    g.beginPath(); g.moveTo(50, h - 30); g.lineTo(50, 110); g.quadraticCurveTo(w / 2, 10, w - 50, 110); g.lineTo(w - 50, h - 30); g.stroke();
+    g.save(); g.translate(w / 2, 140);
+    for (let k = 0; k < 10; k++) { g.rotate(Math.PI / 5); g.beginPath(); g.ellipse(0, -28, 9, 26, 0, 0, 6.283); g.stroke(); }
+    g.restore();
+    g.fillStyle = '#fff0c0'; g.beginPath(); g.arc(w / 2, 140, 10, 0, 6.283); g.fill();
+  });
+  const gpMat = new THREE.MeshStandardMaterial({ map: goldPanel, bumpMap: goldPanel, bumpScale: 3, metalness: .7, roughness: .35 });
+  [-3.65, 3.65].forEach(x => add(new THREE.BoxGeometry(2.2, 2.6, .15), gpMat, x, 1.75, BZ + .1));
+  // glass entrance, lit lobby inside
+  add(new THREE.BoxGeometry(2.8, 2.9, .1), glassLit, 0, 1.85, BZ + .05, false);
+  add(new THREE.BoxGeometry(.08, 2.9, .14), frameW, 0, 1.85, BZ + .08, false);
+  // ground floor windows on the wings of the block
+  [-8.4, 8.4].forEach(x => {
+    add(new THREE.BoxGeometry(2, 1.8, .1), glassDim, x, 2, BZ + .05, false);
+    add(new THREE.BoxGeometry(2.2, .12, .2), frameW, x, 3, BZ + .1, false);
+  });
+  // first floor: a row of windows with white frames
+  for (let i = 0; i < 8; i++) {
+    const x = -8.75 + i * 2.5;
+    if (Math.abs(x) < .1) continue;
+    add(new THREE.BoxGeometry(1.25, 1.55, .1), i % 3 === 1 ? glassDim : glassLit, x, 5.8, BZ + .05, false);
+    add(new THREE.BoxGeometry(1.45, .1, .16), frameW, x, 6.62, BZ + .08, false);
+    add(new THREE.BoxGeometry(1.45, .1, .16), frameW, x, 4.98, BZ + .08, false);
+    add(new THREE.BoxGeometry(.06, 1.55, .14), frameW, x, 5.8, BZ + .08, false);
+  }
+
+  // Rajasthani railing of little arches round the roof
+  const railTex = canvasTex(512, 128, (g, w, h) => {
+    g.clearRect(0, 0, w, h);
+    g.fillStyle = '#f6eee0'; g.fillRect(0, 0, w, h);
+    const n = 8, aw = w / n;
+    for (let i = 0; i < n; i++) {
+      const x = i * aw;
+      g.fillStyle = '#d98a2b';
+      g.beginPath(); g.moveTo(x + 8, h - 10); g.lineTo(x + 8, 52); g.quadraticCurveTo(x + aw / 2, 6, x + aw - 8, 52); g.lineTo(x + aw - 8, h - 10); g.closePath(); g.fill();
+      g.globalCompositeOperation = 'destination-out';
+      g.beginPath(); g.moveTo(x + 15, h - 14); g.lineTo(x + 15, 56); g.quadraticCurveTo(x + aw / 2, 18, x + aw - 15, 56); g.lineTo(x + aw - 15, h - 14); g.closePath(); g.fill();
+      g.globalCompositeOperation = 'source-over';
+    }
+    g.fillStyle = '#c0582a'; g.fillRect(0, 0, w, 8); g.fillRect(0, h - 8, w, 8);
+  });
+  railTex.wrapS = THREE.RepeatWrapping;
+  const railMat = (len) => {
+    const t = railTex.clone(); t.needsUpdate = true; t.repeat.set(len / 3, 1);
+    return new THREE.MeshStandardMaterial({ map: t, transparent: true, alphaTest: .5, side: THREE.DoubleSide, roughness: .8 });
+  };
+  const RH = 1.1, RY = BH + .3 + RH / 2;
+  add(new THREE.PlaneGeometry(BW, RH), railMat(BW), 0, RY, BZ - .1, false);
+  add(new THREE.PlaneGeometry(BW, RH), railMat(BW), 0, RY, BZ - BD + .1, false);
+  [-1, 1].forEach(s => { const m = add(new THREE.PlaneGeometry(BD, RH), railMat(BD), s * (BW / 2 - .1), RY, BZ - BD / 2, false); m.rotation.y = Math.PI / 2; });
+
+  // sign on the roof, as on the real building
+  const roofSign = canvasTex(1024, 192, (g, w, h) => {
+    g.fillStyle = '#f7efe1'; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#c0582a'; g.lineWidth = 8; g.strokeRect(6, 6, w - 12, h - 12);
+    g.fillStyle = '#b3201b'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '700 104px Rasa, Georgia, serif'; g.fillText('NATRAJ', w / 2 - 110, h / 2 + 6);
+    g.font = '600 46px Rasa, Georgia, serif'; g.fillText('HOTEL &', w / 2 + 245, h / 2 - 24); g.fillText('RESORT', w / 2 + 245, h / 2 + 30);
+  });
+  add(new THREE.BoxGeometry(6.4, 1.2, .2), [maroon, maroon, maroon, maroon, new THREE.MeshStandardMaterial({ map: roofSign, emissive: 0xffffff, emissiveMap: roofSign, emissiveIntensity: .35 }), maroon], 0, BH + 1.1, BZ + .05, false);
+
+  // chhatri: domed pavilion on four pillars
+  const chhatri = (x, y, z, s) => {
+    const g = new THREE.Group(); g.position.set(x, y, z); g.scale.setScalar(s);
+    const base = new THREE.Mesh(new THREE.BoxGeometry(2.4, .25, 2.4), ochre); base.position.y = .12; g.add(base);
+    [[-1, -1], [1, -1], [-1, 1], [1, 1]].forEach(([a, b]) => {
+      const p = new THREE.Mesh(new THREE.CylinderGeometry(.09, .11, 1.5, 10), cream); p.position.set(a * .95, 1, b * .95); g.add(p);
+    });
+    const slab = new THREE.Mesh(new THREE.BoxGeometry(2.6, .18, 2.6), ochre); slab.position.y = 1.82; g.add(slab);
+    const dome = new THREE.Mesh(new THREE.SphereGeometry(1.15, 32, 16, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({ color: 0xe0902e, roughness: .5 }));
+    dome.position.y = 1.9; dome.scale.y = 1.15; g.add(dome);
+    const kalash = new THREE.Mesh(new THREE.SphereGeometry(.16, 12, 10), brass); kalash.position.y = 3.3; g.add(kalash);
+    const spike = new THREE.Mesh(new THREE.ConeGeometry(.05, .45, 8), brass); spike.position.y = 3.6; g.add(spike);
+    g.traverse(o => { if (o.isMesh) o.castShadow = true; });
+    scene.add(g); return g;
+  };
+  chhatri(0, BH + .3, BZ - 3, 1.1);
+  [[-BW / 2 + .6, BZ - .6], [BW / 2 - .6, BZ - .6]].forEach(([x, z]) => chhatri(x, BH + .3, z, .45));
+
+  // left wing: single storey with an arcade of arches
+  const arcade = canvasTex(1024, 256, (g, w, h) => {
+    g.fillStyle = '#efe6d6'; g.fillRect(0, 0, w, h);
+    const n = 6, aw = w / n;
+    for (let i = 0; i < n; i++) {
+      const x = i * aw;
+      g.fillStyle = '#2a1a10';
+      g.beginPath(); g.moveTo(x + 24, h); g.lineTo(x + 24, 110); g.quadraticCurveTo(x + aw / 2, 40, x + aw - 24, 110); g.lineTo(x + aw - 24, h); g.fill();
+      g.fillStyle = 'rgba(255,170,80,.55)';
+      g.fillRect(x + aw / 2 - 18, 150, 36, 60);
+      g.strokeStyle = '#d99a2b'; g.lineWidth = 8;
+      g.beginPath(); g.moveTo(x + 24, h); g.lineTo(x + 24, 110); g.quadraticCurveTo(x + aw / 2, 40, x + aw - 24, 110); g.lineTo(x + aw - 24, h); g.stroke();
+    }
+    g.fillStyle = '#d99a2b'; g.fillRect(0, 0, w, 16);
+  });
+  const wingX = -BW / 2 - 8.5, wingZ = BZ + 2;
+  add(new THREE.BoxGeometry(16, 3.4, 7), [cream, cream, cream, cream, new THREE.MeshStandardMaterial({ map: arcade, emissive: 0xffffff, emissiveMap: arcade, emissiveIntensity: .12, roughness: .9 }), cream], wingX, 1.7, wingZ - 3.5);
+  for (let i = 0; i < 7; i++) {
+    const x = wingX - 7.5 + i * 2.5;
+    add(new THREE.CylinderGeometry(.12, .16, .5, 8), ochre, x, 3.65, wingZ - .1);
+    add(new THREE.SphereGeometry(.2, 12, 8, 0, 6.283, 0, Math.PI / 2), ochre, x, 3.9, wingZ - .1);
+  }
+
+  // pool on the right with chhatri lamp posts
+  const poolX = 16, poolZ = BZ + 9;
+  const cope = new THREE.MeshStandardMaterial({ color: 0xd9ccb0, roughness: .7 });
+  [[10.6, .6, 0, -3.3], [10.6, .6, 0, 3.3], [.6, 7.2, -5.3, 0], [.6, 7.2, 5.3, 0]].forEach(([w, d, x, z]) => add(new THREE.BoxGeometry(w, .2, d), cope, poolX + x, .1, poolZ + z));
+  const water = new THREE.Mesh(new THREE.PlaneGeometry(10, 6), new THREE.MeshStandardMaterial({ color: 0x14606e, emissive: 0x0b4d5c, emissiveIntensity: .6, roughness: .15 }));
+  water.rotation.x = -Math.PI / 2; water.position.set(poolX, .08, poolZ); scene.add(water);
+  const lampMat = new THREE.MeshStandardMaterial({ color: 0x2a1a08, emissive: 0xffc062, emissiveIntensity: 3 });
+  const lampPost = (x, z) => {
+    add(new THREE.BoxGeometry(.45, 2.6, .45), ochre, x, 1.3, z);
+    add(new THREE.BoxGeometry(.5, .5, .5), lampMat, x, 2.85, z, false);
+    add(new THREE.BoxGeometry(.7, .1, .7), ochre, x, 3.15, z);
+    add(new THREE.SphereGeometry(.34, 14, 8, 0, 6.283, 0, Math.PI / 2), ochre, x, 3.2, z);
+  };
+  [-5.5, -1.8, 1.8, 5.5].forEach(dx => lampPost(poolX + dx, poolZ - 4.2));
+  const poolLight = new THREE.PointLight(0xffb060, 14, 14, 1.6); poolLight.position.set(poolX, 3, poolZ - 3.5); scene.add(poolLight);
+
+  // the high-mast light on the lawn
+  add(new THREE.CylinderGeometry(.12, .25, 15, 10), new THREE.MeshStandardMaterial({ color: 0x8c8c88, metalness: .6, roughness: .5 }), -11, 7.5, BZ + 12);
+  const ring = new THREE.Mesh(new THREE.TorusGeometry(.9, .08, 8, 24), new THREE.MeshStandardMaterial({ color: 0x777, metalness: .6, roughness: .5 }));
+  ring.rotation.x = Math.PI / 2; ring.position.set(-11, 15, BZ + 12); scene.add(ring);
+  for (let i = 0; i < 6; i++) {
+    const a = i / 6 * 6.283;
+    add(new THREE.BoxGeometry(.35, .2, .25), new THREE.MeshStandardMaterial({ color: 0x111, emissive: 0xfff1d6, emissiveIntensity: 2.5 }), -11 + Math.cos(a) * .9, 14.85, BZ + 12 + Math.sin(a) * .9, false);
+  }
+
+  // night uplights washing the facade
+  [-6, 6].forEach(x => {
+    const sp = new THREE.SpotLight(0xffc27a, 28, 20, .65, .7, 1.4);
+    sp.position.set(x, .4, BZ + 7); sp.target.position.set(x * .8, 5, BZ); scene.add(sp, sp.target);
+  });
+
+  /* --- trees round the edge of the lawn --- */
+  const bark = new THREE.MeshStandardMaterial({ color: 0x3e2c20, roughness: 1 });
+  const leafM = [0x2c4220, 0x34502a, 0x26391b].map(c => new THREE.MeshStandardMaterial({ color: c, roughness: .9, flatShading: true }));
   const tree = (x, z, s) => {
     const g = new THREE.Group(); g.position.set(x, 0, z); g.scale.setScalar(s);
     const trunk = new THREE.Mesh(new THREE.CylinderGeometry(.13, .22, 2.4, 8), bark);
@@ -512,31 +651,187 @@ function start() {
     }
     scene.add(g);
   };
-  [[-9.5, -5, 1.2], [9.8, -6, 1.3], [-11, -14.5, 1.4], [11, -14, 1.2], [-3.4, -24, 1.3], [3.6, -25, 1.5], [-12.5, -22, 1.5], [12.5, -22, 1.4], [-4.5, -5.5, .8], [4.6, -6.2, .85]]
+  [[-6, -4, 1.1], [6.5, -4.5, 1.2], [-8, -9, 1.3], [8.5, -10, 1.2], [-24, -34, 1.8], [-14, -38, 1.7], [14, -38, 1.8], [24, -32, 1.6], [-30, -22, 1.8], [28, -16, 1.6], [0, -42, 2], [-7, -40, 1.6], [7, -41, 1.7]]
     .forEach(([x, z, s]) => tree(x, z, s));
 
-  // festoon strings strung across the courtyard
-  const bulbCols = [0xffd36b, 0xff8c3a, 0xff5c7a, 0xfff1c4];
-  const bulbGeo = new THREE.SphereGeometry(.04, 8, 6);
-  const bulbMats = bulbCols.map(c => new THREE.MeshBasicMaterial({ color: c }));
-  const strings = [[[-5.5, 3.3, -3.2], [5.5, 3.3, -3.2]], [[-6.5, 3.6, -7], [6.5, 3.6, -15]], [[6.5, 3.6, -7], [-6.5, 3.6, -15]]];
-  const bulbs = [];
-  strings.forEach(([a, b]) => {
-    const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), n = 34;
-    const pts = [];
-    for (let i = 0; i <= n; i++) {
-      const t = i / n, p = A.clone().lerp(B, t);
-      p.y -= Math.sin(t * Math.PI) * .7;
-      pts.push(p);
-      if (i % 2 === 0) { const m = new THREE.Mesh(bulbGeo, bulbMats[(i / 2) % 4]); m.position.copy(p); m.position.y -= .05; scene.add(m); bulbs.push(m); }
+  /* =========================================================
+     Diwali
+     ========================================================= */
+  // fairy lights: thousands of glowing points, each twinkling on its own
+  const white = canvasTex(64, 64, (g) => {
+    const r = g.createRadialGradient(32, 32, 0, 32, 32, 32);
+    r.addColorStop(0, 'rgba(255,255,255,1)'); r.addColorStop(.2, 'rgba(255,255,255,.8)'); r.addColorStop(.5, 'rgba(255,255,255,.18)'); r.addColorStop(1, 'rgba(255,255,255,0)');
+    g.fillStyle = r; g.fillRect(0, 0, 64, 64);
+  }, { srgb: false });
+  const pointMats = [];
+  const lightPoints = (pts, cols, size, twinkle = 1) => {
+    const n = pts.length / 3, geo = new THREE.BufferGeometry();
+    geo.setAttribute('position', new THREE.Float32BufferAttribute(pts, 3));
+    geo.setAttribute('tint', new THREE.Float32BufferAttribute(cols, 3));
+    geo.setAttribute('phase', new THREE.Float32BufferAttribute(Array.from({ length: n }, () => rand() * 6.283), 1));
+    const mat = new THREE.ShaderMaterial({
+      uniforms: { time: { value: 0 }, size: { value: size }, scale: { value: 400 }, map: { value: white }, tw: { value: twinkle } },
+      vertexShader: `attribute float phase; attribute vec3 tint; varying vec3 vC; varying float vA; uniform float time, size, scale, tw;
+        void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); vC = tint;
+          vA = mix(1., .45 + .55 * (.5 + .5 * sin(time * 2.3 + phase * 7.)), tw);
+          gl_PointSize = size * scale / -mv.z; gl_Position = projectionMatrix * mv; }`,
+      fragmentShader: `uniform sampler2D map; varying vec3 vC; varying float vA;
+        void main(){ float a = texture2D(map, gl_PointCoord).a; gl_FragColor = vec4(vC * vA * 1.6, a * vA); }`,
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+    });
+    pointMats.push(mat);
+    const p = new THREE.Points(geo, mat); p.frustumCulled = false; scene.add(p); return p;
+  };
+  const warm = [[1, .78, .38], [1, .62, .22], [1, .88, .6]], festive = [[1, .8, .3], [1, .35, .45], [.45, .8, 1], [.55, 1, .45], [1, .6, .2]];
+  const pts = [], cols = [];
+  const pushLine = (a, b, step, pal) => {
+    const A = new THREE.Vector3(...a), B = new THREE.Vector3(...b), n = Math.max(1, Math.round(A.distanceTo(B) / step));
+    for (let i = 0; i <= n; i++) { const p = A.clone().lerp(B, i / n); pts.push(p.x, p.y, p.z); cols.push(...pal[(rand() * pal.length) | 0]); }
+  };
+  // outline the building
+  const fz = BZ + .35;
+  pushLine([-BW / 2, BH + .3 + RH, fz - .4], [BW / 2, BH + .3 + RH, fz - .4], .22, warm);
+  pushLine([-BW / 2 - .3, GF + .2, fz], [BW / 2 + .3, GF + .2, fz], .22, warm);
+  pushLine([-BW / 2 - .2, BH + .32, fz], [BW / 2 + .2, BH + .32, fz], .22, warm);
+  [-5.4, -1.9, 1.9, 5.4].forEach(x => pushLine([x, .4, BZ + .62], [x, BH, BZ + .62], .2, warm));
+  pushLine([-4, GF - .08, BZ + 2.22], [4, GF - .08, BZ + 2.22], .15, warm);
+  // jhalar: curtains of lights hanging down the first floor
+  for (let x = -BW / 2 + .4; x <= BW / 2 - .3; x += .45) {
+    if (Math.abs(x) < 3.3) continue;
+    const len = 1.2 + (Math.abs(Math.sin(x * 3.1)) * 1.4);
+    pushLine([x, BH + .25, fz], [x, BH + .25 - len, fz], .16, festive);
+  }
+  // round the chhatri dome
+  for (let i = 0; i < 40; i++) { const a = i / 40 * 6.283; pts.push(Math.cos(a) * 1.4, BH + .3 + 2.1, BZ - 3 + Math.sin(a) * 1.4); cols.push(...warm[i % 3]); }
+  // wing roof edge and the pool fence
+  pushLine([wingX - 8, 3.45, wingZ + .05], [wingX + 8, 3.45, wingZ + .05], .25, warm);
+  pushLine([poolX - 5.6, .9, poolZ - 4.2], [poolX + 5.6, .9, poolZ - 4.2], .25, festive);
+  // garlands of lights strung over the lawn from the gate towards the building
+  [[-5, 3.8, -2, -5.5, 4.8, -20], [5, 3.8, -2, 5.5, 4.8, -20]].forEach(([x1, y1, z1, x2, y2, z2]) => {
+    for (let i = 0; i <= 90; i++) {
+      const t = i / 90, x = x1 + (x2 - x1) * t, z = z1 + (z2 - z1) * t, y = y1 + (y2 - y1) * t - Math.sin(t * Math.PI * 4) ** 2 * .6;
+      pts.push(x, y, z); cols.push(...festive[i % 5]);
     }
-    const wire = new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 60, .006, 4), new THREE.MeshBasicMaterial({ color: 0x1a120c }));
-    scene.add(wire);
+    for (let k = 0; k <= 4; k++) {
+      const t = k / 4, x = x1 + (x2 - x1) * t, z = z1 + (z2 - z1) * t, y = y1 + (y2 - y1) * t;
+      add(new THREE.CylinderGeometry(.04, .05, y, 6), bark, x, y / 2, z);
+    }
   });
-  // a couple of poles for the strings
-  [[-5.5, -3.2], [5.5, -3.2], [-6.5, -7], [6.5, -7], [-6.5, -15], [6.5, -15]].forEach(([x, z]) => {
-    const p = new THREE.Mesh(new THREE.CylinderGeometry(.04, .05, 3.7, 6), bark); p.position.set(x, 1.85, z); scene.add(p);
+  lightPoints(pts, cols, mobile ? .2 : .17);
+
+  // akash kandils: star lanterns hanging from the canopy and at the gate
+  const kandils = [];
+  const kandil = (x, y, z, color) => {
+    const g = new THREE.Group(); g.position.set(x, y, z);
+    const mat = new THREE.MeshStandardMaterial({ color, emissive: color, emissiveIntensity: 1.8, roughness: .6, side: THREE.DoubleSide });
+    const body = new THREE.Mesh(new THREE.OctahedronGeometry(.28, 0), mat); body.scale.set(1, 1.25, 1); g.add(body);
+    const star = new THREE.Mesh(new THREE.OctahedronGeometry(.2, 0), new THREE.MeshStandardMaterial({ color: 0xffd36b, emissive: 0xffc04a, emissiveIntensity: 2 }));
+    star.rotation.y = Math.PI / 4; star.scale.set(1.5, .5, 1.5); g.add(star);
+    for (let i = 0; i < 6; i++) {
+      const tail = new THREE.Mesh(new THREE.PlaneGeometry(.035, .5), mat);
+      tail.position.set(Math.cos(i) * .1, -.55, Math.sin(i) * .1); g.add(tail);
+    }
+    const cordM = new THREE.Mesh(new THREE.CylinderGeometry(.006, .006, 1, 4), new THREE.MeshBasicMaterial({ color: 0x222 })); cordM.position.y = .8; g.add(cordM);
+    scene.add(g); kandils.push(g);
+  };
+  [-3.2, -1.1, 1.1, 3.2].forEach((x, i) => kandil(x, GF - 1.4, BZ + 2.1, [0xd42a3c, 0xee6a1c, 0xd42a3c, 0xee6a1c][i]));
+  kandil(-(DW / 2 + .75), DH + .1, T / 2 + .5, 0xd42a3c);
+  kandil(DW / 2 + .75, DH + .1, T / 2 + .5, 0xee6a1c);
+
+  // marigold garlands (genda phool) swagged across the gate and down the posts
+  const mari = new THREE.InstancedMesh(new THREE.IcosahedronGeometry(.045, 1), new THREE.MeshStandardMaterial({ roughness: .9 }), 900);
+  let mi = 0; const dummy = new THREE.Object3D(), cO = new THREE.Color(0xf08a12), cY = new THREE.Color(0xf7c21c);
+  const flower = (x, y, z, k) => { dummy.position.set(x, y, z); dummy.rotation.set(rand() * 3, rand() * 3, 0); dummy.updateMatrix(); mari.setMatrixAt(mi, dummy.matrix); mari.setColorAt(mi, (k % 7 < 4) ? cO : cY); mi++; };
+  const gz = T / 2 + .3;
+  for (let sw = 0; sw < 3; sw++) {
+    const x0 = -1.35 + sw * .9, x1 = x0 + .9;
+    for (let i = 0; i <= 18; i++) { const t = i / 18; flower(x0 + (x1 - x0) * t, DH + .02 - Math.sin(t * Math.PI) * .28, gz, i); }
+  }
+  [-1, 1].forEach(s => { for (let i = 0; i < 40; i++) flower(s * (DW / 2 + .12), DH - i * .066, gz - .05, i); });
+  // and along the top of the signboard
+  for (let i = 0; i <= 60; i++) { const t = i / 60; flower(-2.1 + 4.2 * t, 4.95 - Math.sin(t * Math.PI * 3) ** 2 * .12, T / 2 + .2, i); }
+  mari.count = mi; mari.instanceMatrix.needsUpdate = true; mari.instanceColor.needsUpdate = true;
+  scene.add(mari);
+
+  // the resort's name over the gate
+  const gateSign = canvasTex(1024, 300, (g, w, h) => {
+    const gr = g.createLinearGradient(0, 0, 0, h); gr.addColorStop(0, '#8e2a1d'); gr.addColorStop(1, '#6e1d13');
+    g.fillStyle = gr; g.fillRect(0, 0, w, h);
+    g.strokeStyle = '#e0b157'; g.lineWidth = 10; g.strokeRect(14, 14, w - 28, h - 28);
+    g.lineWidth = 3; g.strokeRect(30, 30, w - 60, h - 60);
+    g.fillStyle = '#ffe6a8'; g.textAlign = 'center'; g.textBaseline = 'middle';
+    g.font = '600 92px Rasa, "Noto Serif Gujarati", serif'; g.fillText('હોટેલ નટરાજ', w / 2, 112);
+    g.font = '600 52px Rasa, Georgia, serif'; g.fillText('HOTEL NATRAJ & RESORT', w / 2, 210);
   });
+  add(new THREE.BoxGeometry(4.3, 1.26, .18), [wood, wood, wood, wood,
+    new THREE.MeshStandardMaterial({ map: gateSign, emissive: 0xffffff, emissiveMap: gateSign, emissiveIntensity: .4, roughness: .7 }), wood],
+    0, 4.35, T / 2 + .12, false);
+  const sl = new THREE.SpotLight(0xffd9a0, 6, 7, .5, .8, 1.5); sl.position.set(0, 2.6, 3.4); sl.target.position.set(0, 4.3, .2); scene.add(sl, sl.target);
+  const sp2 = [], sc2 = [];
+  for (let i = 0; i <= 44; i++) { const t = i / 44; sp2.push(-2.2 + 4.4 * t, 3.68, T / 2 + .25); sc2.push(...warm[i % 3]); }
+  lightPoints(sp2, sc2, .14);
+
+  /* --- fireworks over the resort --- */
+  const FW = mobile ? 1800 : 3600;
+  const fwPos = new Float32Array(FW * 3), fwCol = new Float32Array(FW * 3), fwA = new Float32Array(FW);
+  const fwVel = new Float32Array(FW * 3), fwLife = new Float32Array(FW), fwMax = new Float32Array(FW), fwKind = new Uint8Array(FW);
+  const fwGeo = new THREE.BufferGeometry();
+  fwGeo.setAttribute('position', new THREE.BufferAttribute(fwPos, 3).setUsage(THREE.DynamicDrawUsage));
+  fwGeo.setAttribute('tint', new THREE.BufferAttribute(fwCol, 3).setUsage(THREE.DynamicDrawUsage));
+  fwGeo.setAttribute('alpha', new THREE.BufferAttribute(fwA, 1).setUsage(THREE.DynamicDrawUsage));
+  const fwMat = new THREE.ShaderMaterial({
+    uniforms: { scale: { value: 400 }, map: { value: white } },
+    vertexShader: `attribute vec3 tint; attribute float alpha; varying vec3 vC; varying float vA; uniform float scale;
+      void main(){ vec4 mv = modelViewMatrix * vec4(position,1.); vC = tint; vA = alpha; gl_PointSize = .75 * scale / -mv.z * (alpha > 0. ? 1. : 0.); gl_Position = projectionMatrix * mv; }`,
+    fragmentShader: `uniform sampler2D map; varying vec3 vC; varying float vA; void main(){ float a = texture2D(map, gl_PointCoord).a; gl_FragColor = vec4(vC * 2., a * vA); }`,
+    transparent: true, depthWrite: false, blending: THREE.AdditiveBlending
+  });
+  pointMats.push(fwMat);
+  const fw = new THREE.Points(fwGeo, fwMat); fw.frustumCulled = false; scene.add(fw);
+  const fwPal = [[1, .75, .3], [1, .3, .35], [.4, 1, .5], [.5, .7, 1], [1, .45, .9], [1, .95, .7]];
+  let fwNext = 0;
+  const free = () => { for (let i = 0; i < FW; i++) { fwNext = (fwNext + 1) % FW; if (fwLife[fwNext] <= 0) return fwNext; } return -1; };
+  const launch = () => {
+    const i = free(); if (i < 0) return;
+    fwKind[i] = 1;
+    fwPos.set([(rand() - .5) * 40, 2, BZ - 12 - rand() * 10], i * 3);
+    fwVel.set([(rand() - .5) * 3, 19 + rand() * 5, 0], i * 3);
+    fwCol.set([1, .8, .5], i * 3);
+    fwLife[i] = fwMax[i] = .85 + rand() * .3;
+  };
+  const burst = (x, y, z) => {
+    const c1 = fwPal[(rand() * fwPal.length) | 0], c2 = fwPal[(rand() * fwPal.length) | 0];
+    const n = mobile ? 110 : 200, sp = 7 + rand() * 4;
+    for (let k = 0; k < n; k++) {
+      const i = free(); if (i < 0) return;
+      const u = rand() * 2 - 1, a = rand() * 6.283, r = Math.sqrt(1 - u * u), v = sp * (.85 + rand() * .15);
+      fwKind[i] = 2;
+      fwPos.set([x, y, z], i * 3);
+      fwVel.set([r * Math.cos(a) * v, u * v, r * Math.sin(a) * v], i * 3);
+      fwCol.set(k % 3 ? c1 : c2, i * 3);
+      fwLife[i] = fwMax[i] = 1.4 + rand() * .9;
+    }
+  };
+  let fwTimer = 0;
+  const stepFireworks = (dt) => {
+    fwTimer -= dt;
+    if (fwTimer <= 0) { launch(); if (rand() < .35) launch(); fwTimer = .45 + rand() * .7; }
+    const drag = Math.exp(-1.3 * dt);
+    for (let i = 0; i < FW; i++) {
+      if (fwLife[i] <= 0) { fwA[i] = 0; continue; }
+      fwLife[i] -= dt;
+      const j = i * 3;
+      if (fwKind[i] === 2) { fwVel[j] *= drag; fwVel[j + 1] = fwVel[j + 1] * drag - 3.2 * dt; fwVel[j + 2] *= drag; }
+      else fwVel[j + 1] -= 9 * dt;
+      fwPos[j] += fwVel[j] * dt; fwPos[j + 1] += fwVel[j + 1] * dt; fwPos[j + 2] += fwVel[j + 2] * dt;
+      const f = Math.max(0, fwLife[i] / fwMax[i]);
+      fwA[i] = fwKind[i] === 1 ? .9 : Math.pow(f, 1.4) * (.75 + Math.random() * .25);
+      if (fwLife[i] <= 0) { fwA[i] = 0; if (fwKind[i] === 1) burst(fwPos[j], fwPos[j + 1], fwPos[j + 2]); }
+    }
+    fwGeo.attributes.position.needsUpdate = true;
+    fwGeo.attributes.alpha.needsUpdate = true;
+    fwGeo.attributes.tint.needsUpdate = true;
+  };
 
   /* --- post-processing: a soft bloom so flames and bulbs glow --- */
   const composer = new EffectComposer(renderer);
@@ -547,12 +842,12 @@ function start() {
 
   /* --- camera path driven by scroll --- */
   const posPath = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0, 1.55, 7.6), new THREE.Vector3(0, 1.5, 4.2), new THREE.Vector3(0, 1.55, 1.4),
-    new THREE.Vector3(0, 1.65, -1.6), new THREE.Vector3(0, 2.4, -3.6), new THREE.Vector3(0, 3.3, -5)
+    new THREE.Vector3(0, 1.55, 7.8), new THREE.Vector3(0, 1.5, 4.4), new THREE.Vector3(0, 1.55, 1.2),
+    new THREE.Vector3(0, 1.6, -2.2), new THREE.Vector3(0, 1.7, -4), new THREE.Vector3(0, 1.75, -4.6)
   ]);
   const tgtPath = new THREE.CatmullRomCurve3([
-    new THREE.Vector3(0, 1.45, 0), new THREE.Vector3(0, 1.4, -1), new THREE.Vector3(0, 1.4, -5),
-    new THREE.Vector3(0, 1.2, -10), new THREE.Vector3(0, .9, -13), new THREE.Vector3(0, .7, -14)
+    new THREE.Vector3(0, 2.25, 0), new THREE.Vector3(0, 2.0, -2), new THREE.Vector3(0, 2.6, -12),
+    new THREE.Vector3(0, 4.8, -22), new THREE.Vector3(0, 8.2, -26), new THREE.Vector3(0, 8.8, -26)
   ]);
 
   const pointer = { x: 0, y: 0, sx: 0, sy: 0 };
@@ -576,6 +871,7 @@ function start() {
     // narrow screens get a wider lens so the whole gateway fits
     camera.fov = camera.aspect < .8 ? 64 : camera.aspect < 1.2 ? 54 : 44;
     camera.updateProjectionMatrix();
+    pointMats.forEach(m => { m.uniforms.scale.value = renderer.domElement.height / 2 / Math.tan(camera.fov * Math.PI / 360); });
   }
   window.addEventListener('resize', resize);
 
@@ -597,7 +893,7 @@ function start() {
   function frame() {
     running = false;
     if (!visible) return;
-    const t = clock.getElapsedTime();
+    const dt = clock.getDelta(); const t = clock.elapsedTime;
     const p = progress;
 
     // doors swing inward over the first part of the scroll
@@ -628,7 +924,9 @@ function start() {
       d.halo.material.opacity = .75 + (k - .85) * 2;
       if (d.pl) d.pl.intensity = 2.2 * k;
     });
-    bulbs.forEach((b, i) => { b.visible = Math.sin(t * 2 + i * 1.3) > -.97; });
+    pointMats.forEach(m => { if (m.uniforms.time) m.uniforms.time.value = t; });
+    kandils.forEach((k, i) => { k.rotation.y = Math.sin(t * .6 + i) * .4; k.rotation.z = Math.sin(t * 1.1 + i * 2) * .04; });
+    stepFireworks(Math.min(dt, .05));
 
     composer.render();
     loop();
