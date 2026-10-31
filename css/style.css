@@ -383,3 +383,16 @@ h1, h2, h3, p { margin: 0; }
   .dock a { text-align: center; padding: 14px 0 13px; font-weight: 600; text-decoration: none; background: var(--paper); }
   .dock a + a { background: var(--red); color: #fbf4e8; }
 }
+
+/* resort's own logo, on a white disc as on the original site */
+.mark__logo {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #fff; object-fit: contain; padding: 3px;
+  box-shadow: 0 0 0 1.5px var(--haldi);
+}
+.hero__tag { margin-top: 6px; font: italic 400 21px var(--serif); color: var(--red); }
+.foot__logo {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #fff; object-fit: contain; padding: 4px;
+  margin-bottom: 18px; box-shadow: 0 0 0 2px var(--haldi);
+}
