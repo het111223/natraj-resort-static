@@ -9,12 +9,697 @@
   <meta property="og:description" content="Cottages, a pool, lawns and a banquet hall on the Gandhinagar–Mahudi highway.">
   <meta property="og:image" content="https://natrajhotel.co.in/images/uploads/586/3468_738hotel_natraj_resort_img__7_.jpg">
   <meta name="theme-color" content="#f4ecdd">
-  <link rel="icon" type="image/png" href="https://natrajhotel.co.in/images/uploads/logos/174350195987logo.png">
-  <link rel="apple-touch-icon" href="https://natrajhotel.co.in/images/uploads/logos/174350195987logo.png">
+  <link rel="icon" type="image/png" href="images/logos/174350195987logo.png">
+  <link rel="apple-touch-icon" href="images/logos/174350195987logo.png">
+  <script>
+  // Photos live in images/. If one hasn't been copied there yet, load it from the resort's own site instead.
+  document.addEventListener('error', function (e) {
+    var img = e.target;
+    if (img.tagName !== 'IMG') return;
+    if (img.dataset.tried) { img.classList.add('is-missing'); return; }
+    var src = img.getAttribute('src') || '';
+    if (src.indexOf('images/') !== 0) { img.classList.add('is-missing'); return; }
+    img.dataset.tried = '1';
+    img.src = 'https://natrajhotel.co.in/images/uploads/' + src.slice(7);
+  }, true);
+  </script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Rasa:ital,wght@0,400;0,500;0,600;1,400&family=Mukta+Vaani:wght@400;500;600&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="css/style.css">
+  <style>
+/* Hotel Natraj & Resort
+   Palette taken from Kutch ajrakh block prints: indigo, madder red,
+   turmeric, on unbleached cotton. */
+
+:root {
+  --paper: #f4ecdd;
+  --paper-2: #ebdfca;
+  --ink: #2b2019;
+  --ink-soft: #5d4d40;
+  --indigo: #1d2b49;
+  --indigo-2: #26375c;
+  --red: #9b2b1e;
+  --red-dark: #7d2116;
+  --haldi: #d8992a;
+  --leaf: #55602f;
+  --line: #d5c4a6;
+
+  --serif: "Rasa", "Noto Serif Gujarati", Georgia, serif;
+  --sans: "Mukta Vaani", "Noto Sans Gujarati", system-ui, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; scroll-padding-top: 84px; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } * { transition: none !important; } }
+
+body {
+  margin: 0;
+  background: var(--paper);
+  color: var(--ink);
+  font: 400 17px/1.65 var(--sans);
+  -webkit-font-smoothing: antialiased;
+}
+/* faint grain, like handmade paper */
+body::before {
+  content: "";
+  position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  opacity: .5;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 .45 0 0 0 0 .35 0 0 0 0 .2 0 0 0 .09 0'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+img { display: block; max-width: 100%; }
+[hidden] { display: none !important; }
+a { color: inherit; }
+h1, h2, h3, p { margin: 0; }
+[lang="gu"] { font-family: var(--serif); }
+
+.wrap { width: min(1160px, 100% - 40px); margin-inline: auto; }
+
+.skip { position: absolute; left: -999px; }
+.skip:focus { left: 12px; top: 12px; z-index: 200; background: var(--ink); color: var(--paper); padding: 8px 14px; }
+
+:focus-visible { outline: 2px solid var(--red); outline-offset: 3px; }
+
+/* ---------- buttons ---------- */
+.btn {
+  display: inline-block;
+  padding: 13px 22px 12px;
+  font: 600 15px/1 var(--sans);
+  letter-spacing: .01em;
+  text-decoration: none;
+  border: 1.5px solid transparent;
+  border-radius: 3px;
+  transition: background .2s, color .2s, transform .2s;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn--red { background: var(--red); color: #fbf4e8; }
+.btn--red:hover { background: var(--red-dark); }
+.btn--line { border-color: var(--ink); color: var(--ink); background: transparent; }
+.btn--line:hover { background: var(--ink); color: var(--paper); }
+.btn--haldi { background: var(--haldi); color: var(--indigo); }
+.btn--haldi:hover { background: #e7ab3d; }
+
+/* ---------- top line + header ---------- */
+.topline { background: var(--indigo); color: #d9cfbd; font-size: 13.5px; }
+.topline__in { display: flex; justify-content: space-between; gap: 16px; padding: 7px 0 6px; }
+.topline a { text-decoration: none; color: #f0e4cf; }
+
+.head {
+  position: sticky; top: 0; z-index: 50;
+  background: var(--paper);
+  transition: box-shadow .25s;
+}
+.head.is-stuck { box-shadow: 0 1px 0 var(--line), 0 6px 20px -14px rgba(43,32,25,.5); }
+.head__in { display: flex; align-items: center; justify-content: space-between; padding: 12px 0; }
+
+.mark { display: flex; align-items: center; gap: 12px; text-decoration: none; }
+.mark__gu { font-size: 34px; line-height: 1; color: var(--red); font-weight: 600; padding-top: 6px; }
+.mark__en {
+  font: 500 12px/1.25 var(--sans);
+  letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft);
+  border-left: 1px solid var(--line); padding-left: 12px;
+}
+
+.nav { display: flex; align-items: center; gap: 26px; font-size: 15.5px; }
+.nav a { text-decoration: none; color: var(--ink); }
+.nav a:not(.nav__cta):hover { color: var(--red); }
+.nav__cta { background: var(--red); color: #fbf4e8 !important; padding: 8px 16px 7px; border-radius: 3px; font-weight: 600; }
+.navbtn { display: none; }
+
+@media (max-width: 860px) {
+  .navbtn {
+    display: block; background: none; border: 1.5px solid var(--ink); border-radius: 3px;
+    font: 600 14px var(--sans); padding: 7px 14px 6px; color: var(--ink); cursor: pointer;
+  }
+  .nav {
+    position: absolute; left: 0; right: 0; top: 100%;
+    flex-direction: column; align-items: stretch; gap: 0;
+    background: var(--paper); border-bottom: 1px solid var(--line);
+    display: none; padding: 6px 20px 18px;
+  }
+  .nav.is-open { display: flex; }
+  .nav a { padding: 12px 0; border-bottom: 1px dashed var(--line); }
+  .nav__cta { margin-top: 14px; text-align: center; border-bottom: 0 !important; }
+}
+
+/* toran: the string of cloth flags hung over a doorway */
+.toran {
+  height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='72' height='30'%3E%3Cpath d='M0 2.5h72' stroke='%231d2b49' stroke-width='2'/%3E%3Cpath d='M3 3h30L18 22z' fill='%239b2b1e'/%3E%3Cpath d='M10 3h16l-8 10z' fill='%23d8992a'/%3E%3Ccircle cx='18' cy='26' r='2.6' fill='%23d8992a'/%3E%3Cpath d='M39 3h30L54 22z' fill='%231d2b49'/%3E%3Cpath d='M46 3h16l-8 10z' fill='%23f4ecdd'/%3E%3Ccircle cx='54' cy='26' r='2.6' fill='%239b2b1e'/%3E%3C/svg%3E") repeat-x left top;
+  position: relative; z-index: 2;
+}
+
+/* ---------- hero ---------- */
+.hero { padding: 40px 0 70px; overflow: hidden; }
+.hero__in { display: grid; grid-template-columns: 1.05fr .95fr; gap: 56px; align-items: center; }
+.hero__gu { font-size: clamp(72px, 11vw, 148px); line-height: .9; color: var(--red); font-weight: 500; margin-left: -4px; }
+.hero__gloss { margin-top: 8px; color: var(--ink-soft); font-size: 15px; }
+.hero h1 {
+  margin-top: 26px;
+  font: 500 clamp(34px, 4.2vw, 54px)/1.05 var(--serif);
+  letter-spacing: -.01em;
+}
+.hero__lede { margin-top: 18px; max-width: 34em; font-size: 18.5px; color: var(--ink-soft); }
+.hero__btns { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 30px; }
+
+.hero__pic { position: relative; margin: 0; padding: 0 0 40px 40px; }
+.arch {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  background: var(--indigo);
+  -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V30C0 17 16 9 30 6 40 4 47 2 50 0c3 2 10 4 20 6 14 3 30 11 30 24v70z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+          mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100' preserveAspectRatio='none'%3E%3Cpath d='M0 100V30C0 17 16 9 30 6 40 4 47 2 50 0c3 2 10 4 20 6 14 3 30 11 30 24v70z'/%3E%3C/svg%3E") center / 100% 100% no-repeat;
+}
+.arch img { width: 100%; height: 100%; object-fit: cover; }
+.hero__pic::before {
+  /* thin outline arch sitting behind the photo, offset */
+  content: ""; position: absolute; left: 0; top: 40px; right: 40px; bottom: 0;
+  border: 1.5px solid var(--red);
+  border-radius: 50% 50% 0 0 / 22% 22% 0 0;
+  border-bottom: 0;
+}
+.hero__pic2 {
+  position: absolute; left: 0; bottom: 0;
+  width: 44%; aspect-ratio: 4 / 3; object-fit: cover;
+  border: 6px solid var(--paper);
+  box-shadow: 0 10px 30px -12px rgba(43,32,25,.45);
+  transform: rotate(-2.5deg);
+}
+
+@media (max-width: 860px) {
+  .hero { padding-top: 24px; }
+  .hero__in { grid-template-columns: 1fr; gap: 40px; }
+  .hero__pic { max-width: 440px; }
+}
+
+/* ledger strip with bandhani dots above and below */
+.ledger { background: var(--paper-2); position: relative; padding: 22px 0; }
+.ledger::before, .ledger::after {
+  content: ""; position: absolute; left: 0; right: 0; height: 8px;
+  background:
+    radial-gradient(circle, var(--red) 1.6px, transparent 2.2px) 0 0 / 12px 8px repeat-x;
+}
+.ledger::before { top: 6px; }
+.ledger::after { bottom: 6px; }
+.ledger__in {
+  display: flex; flex-wrap: wrap; justify-content: space-between; gap: 6px 22px;
+  padding: 12px 0; font: 500 16px var(--serif); color: var(--indigo);
+}
+.ledger__in span { white-space: nowrap; }
+.ledger__in span + span::before { content: "✦"; color: var(--haldi); font-size: 11px; margin-right: 22px; vertical-align: 2px; }
+@media (max-width: 860px) { .ledger__in { justify-content: flex-start; } .ledger__in span + span::before { margin-right: 10px; } }
+
+/* ---------- section heads ---------- */
+.kicker {
+  display: flex; align-items: baseline; gap: 12px; flex-wrap: wrap;
+  font: 500 13px var(--sans); letter-spacing: .16em; text-transform: uppercase; color: var(--ink-soft);
+}
+.kicker span { font-size: 20px; letter-spacing: 0; text-transform: none; color: var(--red); font-weight: 600; }
+.kicker--light { color: #c9bfae; }
+.kicker--light span { color: var(--haldi); }
+.sechead { margin-bottom: 36px; }
+.sechead__title { margin-top: 6px; font: 500 clamp(32px, 4vw, 46px)/1.1 var(--serif); }
+
+/* ---------- about ---------- */
+.about { padding: 96px 0 90px; }
+.about__cols { display: grid; grid-template-columns: 1.1fr 1fr; gap: 64px; margin-top: 28px; }
+.about__big { font: 400 clamp(24px, 2.6vw, 31px)/1.35 var(--serif); }
+.about__cols p + p { margin-top: 14px; }
+.about__cols > div { color: var(--ink-soft); }
+.about__note { padding-left: 14px; border-left: 3px solid var(--haldi); color: var(--ink); }
+@media (max-width: 860px) { .about { padding: 64px 0; } .about__cols { grid-template-columns: 1fr; gap: 24px; } }
+
+/* ---------- cottages ---------- */
+.cottages { padding: 0 0 96px; }
+.tabs { display: flex; flex-wrap: wrap; gap: 0; border-bottom: 1px solid var(--line); margin-bottom: 30px; }
+.tabs button {
+  background: none; border: 0; cursor: pointer;
+  font: 500 16px var(--sans); color: var(--ink-soft);
+  padding: 12px 18px 11px; margin-bottom: -1px;
+  border-bottom: 3px solid transparent;
+}
+.tabs button:hover { color: var(--ink); }
+.tabs button[aria-selected="true"] { color: var(--red); border-bottom-color: var(--red); }
+
+.room { display: grid; grid-template-columns: 1.35fr 1fr; gap: 48px; align-items: start; }
+.room__main { width: 100%; aspect-ratio: 3 / 2; object-fit: cover; background: var(--paper-2); }
+.room__thumbs { display: flex; gap: 10px; margin-top: 10px; }
+.room__thumbs button { padding: 0; border: 2px solid transparent; background: none; cursor: pointer; width: 92px; opacity: .7; }
+.room__thumbs button[aria-pressed="true"] { border-color: var(--red); opacity: 1; }
+.room__thumbs img { width: 100%; aspect-ratio: 1; object-fit: cover; }
+.room__text h3 { font: 500 34px/1.1 var(--serif); }
+.room__text p { margin: 14px 0 26px; color: var(--ink-soft); }
+
+.inroom { margin-top: 56px; padding: 22px 26px; border: 1px solid var(--line); background: rgba(255,250,240,.5); }
+.inroom__h { font: 600 13px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.inroom ul { list-style: none; padding: 0; margin: 12px 0 0; display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px 20px; }
+.inroom li::before { content: ""; display: inline-block; width: 6px; height: 6px; background: var(--haldi); transform: rotate(45deg); margin-right: 10px; vertical-align: 3px; }
+
+@media (max-width: 860px) {
+  .room { grid-template-columns: 1fr; gap: 24px; }
+  .inroom ul { grid-template-columns: 1fr 1fr; }
+  .tabs { flex-wrap: nowrap; overflow-x: auto; }
+  .tabs button { white-space: nowrap; padding: 10px 12px 9px; }
+}
+
+/* ajrakh band: block-printed star lattice */
+.ajrakh-band {
+  height: 56px;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='56' height='56'%3E%3Crect width='56' height='56' fill='%231d2b49'/%3E%3Cg transform='translate(28 28)'%3E%3Crect x='-11' y='-11' width='22' height='22' fill='%239b2b1e'/%3E%3Crect x='-11' y='-11' width='22' height='22' fill='%239b2b1e' transform='rotate(45)'/%3E%3Ccircle r='6' fill='%23f4ecdd'/%3E%3Ccircle r='2.5' fill='%231d2b49'/%3E%3C/g%3E%3Cg fill='%23f4ecdd'%3E%3Ccircle cx='0' cy='0' r='3'/%3E%3Ccircle cx='56' cy='0' r='3'/%3E%3Ccircle cx='0' cy='56' r='3'/%3E%3Ccircle cx='56' cy='56' r='3'/%3E%3C/g%3E%3C/svg%3E") center / 56px 56px repeat-x;
+  border-top: 4px solid var(--haldi);
+  border-bottom: 4px solid var(--haldi);
+}
+
+/* ---------- facilities ---------- */
+.resort { padding: 96px 0; }
+.fac {
+  display: grid; gap: 14px;
+  grid-template-columns: 1.1fr 1fr 1fr;
+  grid-template-rows: 260px 260px;
+}
+.fac__i { margin: 0; position: relative; overflow: hidden; background: var(--paper-2); }
+.fac__i--tall { grid-row: span 2; }
+.fac__i--wide { grid-column: span 2; }
+.fac__i img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s ease; }
+.fac__i:hover img { transform: scale(1.03); }
+.fac__i figcaption {
+  position: absolute; left: 0; bottom: 0;
+  background: var(--paper); padding: 10px 16px 8px;
+  display: flex; align-items: baseline; gap: 10px;
+}
+.fac__i b { font: 500 19px var(--serif); }
+.fac__i figcaption span { color: var(--red); font-size: 15px; }
+.resort__note { margin-top: 22px; color: var(--ink-soft); font-size: 15.5px; }
+@media (max-width: 860px) {
+  .resort { padding: 64px 0; }
+  .fac { grid-template-columns: 1fr 1fr; grid-template-rows: auto; grid-auto-rows: 200px; }
+  .fac__i--tall { grid-row: auto; grid-column: span 2; height: 260px; }
+}
+
+/* ---------- weddings ---------- */
+.wed {
+  background: var(--indigo);
+  color: #ece2d0;
+  padding: 96px 0 84px;
+  position: relative;
+}
+.wed::before {
+  /* small four-dot bandhani repeat, very faint */
+  content: ""; position: absolute; inset: 0; pointer-events: none; opacity: .14;
+  background:
+    radial-gradient(circle at 4px 4px, var(--haldi) 1.3px, transparent 1.8px),
+    radial-gradient(circle at 10px 4px, var(--haldi) 1.3px, transparent 1.8px),
+    radial-gradient(circle at 4px 10px, var(--haldi) 1.3px, transparent 1.8px),
+    radial-gradient(circle at 10px 10px, var(--haldi) 1.3px, transparent 1.8px);
+  background-size: 34px 34px;
+}
+.wed__in { position: relative; display: grid; grid-template-columns: 1fr 1.1fr; gap: 56px; align-items: center; }
+.wed__title { margin: 14px 0 20px; font: 500 clamp(32px, 4vw, 46px)/1.1 var(--serif); color: #fbf4e8; }
+.wed__text p:not(.wed__title) { color: #c9bfae; margin-bottom: 14px; }
+.wed__text .btn { margin-top: 12px; }
+.wed__pics { display: grid; grid-template-columns: 1.2fr 1fr; gap: 14px; align-items: end; }
+.wed__pics img { width: 100%; object-fit: cover; border: 6px solid #f4ecdd; }
+.wed__pics img:first-child { aspect-ratio: 3 / 4; }
+.wed__pics img:last-child { aspect-ratio: 1; transform: translateY(-40px); }
+
+.words { position: relative; display: grid; grid-template-columns: repeat(3, 1fr); gap: 28px; margin-top: 56px; padding-top: 40px; border-top: 1px solid rgba(236,226,208,.2); }
+.words blockquote { margin: 0; }
+.words p { font: 400 20px/1.45 var(--serif); color: #fbf4e8; }
+.words p::before { content: "“"; color: var(--haldi); font-size: 44px; line-height: 0; vertical-align: -16px; margin-right: 4px; }
+.words cite { display: block; margin-top: 12px; font-style: normal; font-size: 14px; color: var(--haldi); }
+@media (max-width: 860px) {
+  .wed { padding: 64px 0; }
+  .wed__in, .words { grid-template-columns: 1fr; gap: 32px; }
+  .wed__pics img:last-child { transform: none; }
+}
+
+/* ---------- gallery ---------- */
+.gal { padding: 96px 0; }
+.chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 26px; }
+.chips button {
+  font: 500 14.5px var(--sans); color: var(--ink);
+  background: none; border: 1px solid var(--line); border-radius: 30px;
+  padding: 6px 14px 5px; cursor: pointer;
+}
+.chips button:hover { border-color: var(--ink); }
+.chips button[aria-pressed="true"] { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+.gal__grid { columns: 3 260px; column-gap: 12px; }
+.gal__item { display: block; width: 100%; padding: 0; border: 0; background: var(--paper-2); margin: 0 0 12px; cursor: zoom-in; break-inside: avoid; }
+.gal__item img { width: 100%; height: auto; transition: opacity .2s; }
+.gal__item:hover img { opacity: .88; }
+
+.lb { border: 0; padding: 0; background: transparent; max-width: 100vw; max-height: 100vh; width: 100vw; height: 100vh; }
+.lb::backdrop { background: rgba(20,16,12,.92); }
+.lb[open] { display: grid; place-items: center; }
+.lb img { max-width: 90vw; max-height: 82vh; object-fit: contain; border: 6px solid var(--paper); }
+.lb__cap { position: fixed; bottom: 18px; left: 0; right: 0; text-align: center; color: #d9cfbd; font-size: 14px; }
+.lb button { position: fixed; background: none; border: 0; color: #f4ecdd; cursor: pointer; font: 300 46px/1 var(--serif); padding: 10px 16px; }
+.lb__x { top: 10px; right: 14px; }
+.lb__prev { left: 6px; top: 50%; transform: translateY(-50%); }
+.lb__next { right: 6px; top: 50%; transform: translateY(-50%); }
+
+/* ---------- nearby ---------- */
+.near { background: var(--paper-2); padding: 96px 0; }
+.near__in { display: grid; grid-template-columns: 1.2fr 1fr; gap: 40px; }
+.near__map iframe { width: 100%; height: 380px; border: 0; display: block; filter: sepia(.25) saturate(.85); }
+.near__map address { font-style: normal; margin-top: 16px; color: var(--ink-soft); }
+.near__map address a { display: inline-block; margin-top: 6px; color: var(--red); font-weight: 600; text-decoration: none; }
+.sights { list-style: none; margin: 0; padding: 0; }
+.sights li { display: grid; grid-template-columns: 64px 1fr auto; gap: 16px; align-items: center; padding: 12px 0; border-bottom: 1px dashed #c8b796; }
+.sights li:first-child { padding-top: 0; }
+.sights img { width: 64px; height: 64px; object-fit: cover; border-radius: 50%; background: var(--line); }
+.sights b { display: block; font: 500 19px/1.2 var(--serif); }
+.sights span { color: var(--red); font-size: 15px; }
+.sights a { font-size: 14px; font-weight: 600; text-decoration: none; border-bottom: 1.5px solid var(--haldi); }
+@media (max-width: 860px) { .near { padding: 64px 0; } .near__in { grid-template-columns: 1fr; } .near__map iframe { height: 300px; } }
+
+/* ---------- faq ---------- */
+.faq { padding: 96px 0; }
+.faq__list { max-width: 780px; border-top: 1px solid var(--line); }
+.faq details { border-bottom: 1px solid var(--line); }
+.faq summary {
+  cursor: pointer; list-style: none;
+  padding: 18px 40px 18px 0; position: relative;
+  font: 500 20px/1.3 var(--serif);
+}
+.faq summary::-webkit-details-marker { display: none; }
+.faq summary::after { content: "+"; position: absolute; right: 4px; top: 14px; font: 300 28px var(--serif); color: var(--red); }
+.faq details[open] summary::after { content: "–"; }
+.faq details p { padding: 0 0 20px; color: var(--ink-soft); max-width: 60ch; }
+@media (max-width: 860px) { .faq { padding: 64px 0; } }
+
+/* ---------- footer ---------- */
+.foot { background: var(--red); color: #f7e9d6; padding: 64px 0 28px; border-top: 6px solid var(--haldi); }
+.foot__in { display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 32px; }
+.foot__gu { font: 500 clamp(36px, 5vw, 60px)/1 var(--serif); }
+.foot__gloss { margin-top: 10px; opacity: .8; }
+.foot__contact { display: flex; flex-direction: column; gap: 4px; text-align: right; }
+.foot__contact a { text-decoration: none; }
+.foot__contact a:hover { text-decoration: underline; }
+.foot__phone { font: 500 28px var(--serif); }
+.foot__small { margin-top: 48px; padding-top: 18px; border-top: 1px solid rgba(247,233,214,.25); font-size: 13px; opacity: .75; }
+@media (max-width: 860px) { .foot__contact { text-align: left; } .foot { padding-bottom: 90px; } }
+
+/* ---------- mobile call / whatsapp dock ---------- */
+.dock { display: none; }
+@media (max-width: 860px) {
+  body:not(.past-gate) .dock { transform: translateY(100%); }
+  .dock { transition: transform .3s;
+    display: grid; grid-template-columns: 1fr 1fr;
+    position: fixed; left: 0; right: 0; bottom: 0; z-index: 60;
+    border-top: 1px solid var(--line);
+  }
+  .dock a { text-align: center; padding: 14px 0 13px; font-weight: 600; text-decoration: none; background: var(--paper); }
+  .dock a + a { background: var(--red); color: #fbf4e8; }
+}
+
+/* resort's own logo, on a white disc as on the original site */
+.mark__logo {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: #fff; object-fit: contain; padding: 3px;
+  box-shadow: 0 0 0 1.5px var(--haldi);
+}
+.hero__tag { margin-top: 6px; font: italic 400 21px var(--serif); color: var(--red); }
+.foot__logo {
+  width: 72px; height: 72px; border-radius: 50%;
+  background: #fff; object-fit: contain; padding: 4px;
+  margin-bottom: 18px; box-shadow: 0 0 0 2px var(--haldi);
+}
+
+/* =========================================================
+   Entrance: a haveli door that opens as you scroll
+   ========================================================= */
+.gate { position: relative; height: 270vh; background: #e8dcc4; }
+.gate__stage { position: sticky; top: 0; height: 100vh; height: 100svh; overflow: hidden; }
+
+.gate__beyond { position: absolute; inset: 0; }
+.gate__beyond img, .gate__dusk { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; transform: scale(1.15); }
+.gate__beyond::after {
+  content: ""; position: absolute; inset: 0;
+  background: linear-gradient(180deg, rgba(20,14,8,.15) 30%, rgba(20,14,8,.65));
+}
+.gate__welcome { position: absolute; left: 0; right: 0; top: 30vh; z-index: 1; text-align: center; color: #fbf4e8; opacity: 0; }
+.gate__gu { font: 500 clamp(84px, 15vw, 190px)/.9 var(--serif); text-shadow: 0 4px 30px rgba(0,0,0,.35); }
+.gate__gloss { margin-top: 10px; font-size: 17px; opacity: .9; }
+
+.gate__world {
+  position: absolute; inset: 0;
+  perspective: 900px;
+  will-change: transform;
+}
+.gate__doorway {
+  --dh: min(66vh, 104vw);
+  --dw: calc(var(--dh) * .6);
+  position: absolute; left: 50%; top: 45%;
+  width: var(--dw); height: var(--dh);
+  transform: translate(-50%, -50%);
+  transform-style: preserve-3d;
+}
+
+/* the wall is the frame's giant shadow, so the doorway stays a real hole */
+.gate__frame {
+  position: absolute; inset: 0;
+  perspective: 1100px;
+  cursor: pointer;
+  border: calc(var(--dw) * .075) solid #4a2a19;
+  border-bottom: 0;
+  box-shadow:
+    0 0 0 calc(var(--dw) * .025) #c39a4b,
+    0 0 0 calc(var(--dw) * .06) #3d2214,
+    0 10px 40px calc(var(--dw) * .06) rgba(60,35,15,.35);
+}
+.gate__frame::before {
+  /* carved bead along the inside of the frame */
+  content: ""; position: absolute; inset: -6px -6px 0; pointer-events: none;
+  border: 3px dotted #b8893e; border-bottom: 0;
+}
+
+.leaf {
+  position: absolute; top: 0; bottom: 0; width: 50%;
+  padding: 9% 9% 11%;
+  background:
+    repeating-linear-gradient(90deg, rgba(0,0,0,.06) 0 2px, transparent 2px 9px, rgba(255,220,170,.04) 9px 11px, transparent 11px 17px),
+    linear-gradient(90deg, #5b331e, #744327 45%, #5e341f);
+  box-shadow: inset 0 0 0 2px #3a1f11, inset 0 0 30px rgba(0,0,0,.35);
+  will-change: transform, filter;
+}
+.leaf--l { left: 0; transform-origin: left center; }
+.leaf--r { right: 0; transform-origin: right center; }
+.leaf--l::after, .leaf--r::after {
+  /* brass strip with studs along the meeting edge */
+  content: ""; position: absolute; top: 0; bottom: 0; width: 7px;
+  background:
+    radial-gradient(circle, #f3d184 0 1.8px, #8a6420 2.6px, transparent 3.2px) center top / 7px 18px repeat-y,
+    linear-gradient(90deg, #8a6420, #c99d4a, #8a6420);
+}
+.leaf--l::after { right: 0; }
+.leaf--r::after { left: 0; }
+
+.leaf__panels { display: grid; grid-template-rows: 1fr 1.3fr 1fr; grid-template-columns: 1fr; gap: 7%; height: 100%; }
+.leaf__panels i:nth-child(n+4) { display: none; }
+.leaf__panels i {
+  position: relative;
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='-50 -50 100 100'%3E%3Cg fill='%23683b22' stroke='%232e170b' stroke-width='1.6'%3E%3Cellipse rx='9' ry='30' transform='rotate(0)'/%3E%3Cellipse rx='9' ry='30' transform='rotate(45)'/%3E%3Cellipse rx='9' ry='30' transform='rotate(90)'/%3E%3Cellipse rx='9' ry='30' transform='rotate(135)'/%3E%3C/g%3E%3Ccircle r='38' fill='none' stroke='%232e170b' stroke-width='1.4' stroke-dasharray='2 3'/%3E%3Ccircle r='9' fill='%23c99d4a' stroke='%236b4a14' stroke-width='2'/%3E%3Ccircle r='3.5' fill='%23f3d184'/%3E%3C/svg%3E") center / min(90%, 120px) no-repeat,
+    #613720;
+  box-shadow: inset 2px 2px 0 rgba(0,0,0,.35), inset -2px -2px 0 rgba(255,210,150,.12), 0 0 0 3px #4a2816;
+}
+.leaf__ring {
+  position: absolute; top: 50%; width: 22px; height: 22px; margin-top: -11px;
+  border: 3px solid #c99d4a; border-radius: 50%;
+  box-shadow: 0 2px 3px rgba(0,0,0,.5);
+}
+.leaf--l .leaf__ring { right: 12%; }
+.leaf--r .leaf__ring { left: 12%; }
+
+.gate__lintel {
+  position: absolute; left: calc(var(--dw) * -.16); right: calc(var(--dw) * -.16);
+  top: calc(var(--dw) * -.2); height: calc(var(--dw) * .13);
+  background:
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='28' height='28'%3E%3Crect width='28' height='28' fill='%231d2b49'/%3E%3Cg transform='translate(14 14)'%3E%3Crect x='-6' y='-6' width='12' height='12' fill='%239b2b1e'/%3E%3Crect x='-6' y='-6' width='12' height='12' fill='%239b2b1e' transform='rotate(45)'/%3E%3Ccircle r='3' fill='%23f4ecdd'/%3E%3C/g%3E%3C/svg%3E") center / auto 100% repeat-x;
+  border-top: 4px solid #4a2a19; border-bottom: 4px solid #c39a4b;
+  box-shadow: 0 6px 10px -4px rgba(0,0,0,.35);
+}
+.gate__toran {
+  position: absolute; left: calc(var(--dw) * -.12); right: calc(var(--dw) * -.12);
+  top: calc(var(--dw) * -.07); height: 30px;
+  background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='36' height='30'%3E%3Cpath d='M0 2.5h36' stroke='%233a2416' stroke-width='2'/%3E%3Cpath d='M3 3h30L18 22z' fill='%23d42a3c'/%3E%3Cpath d='M10 3h16l-8 10z' fill='%23f2ad1d'/%3E%3Ccircle cx='18' cy='26' r='2.6' fill='%233a9a48'/%3E%3C/svg%3E") repeat-x center top;
+  transform-origin: top center;
+  animation: toran 5s ease-in-out infinite;
+}
+@keyframes toran { 0%,100% { transform: skewX(0) } 50% { transform: skewX(-3deg) } }
+
+.gate__shubh {
+  position: absolute; top: 20%;
+  font: 600 clamp(22px, calc(var(--dw) * .1), 40px)/1 var(--serif);
+  color: #b0281c; writing-mode: vertical-rl; letter-spacing: .1em;
+  opacity: .9;
+}
+.gate__shubh--l { right: calc(100% + var(--dw) * .17); }
+.gate__shubh--r { left: calc(100% + var(--dw) * .17); }
+
+
+/* limewashed wall with a doorway-shaped hole cut out of it */
+.gate__wall {
+  position: absolute; inset: -300vmax;
+  background:
+    radial-gradient(ellipse 60vmax 45vmax at 50% 55%, rgba(255,247,230,.75), transparent 70%),
+    radial-gradient(circle at 20% 30%, rgba(160,120,70,.08), transparent 30%),
+    radial-gradient(circle at 75% 60%, rgba(160,120,70,.07), transparent 25%),
+    url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='220' height='220'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.012 .03' numOctaves='3' seed='4'/%3E%3CfeColorMatrix values='0 0 0 0 .5 0 0 0 0 .38 0 0 0 0 .22 0 0 0 .16 0'/%3E%3C/filter%3E%3Crect width='220' height='220' filter='url(%23n)'/%3E%3C/svg%3E"),
+    #e6d6b8;
+  -webkit-mask: linear-gradient(#000 0 0), linear-gradient(#000 0 0) center / var(--dw) var(--dh) no-repeat;
+  -webkit-mask-composite: xor;
+          mask: linear-gradient(#000 0 0) exclude, linear-gradient(#000 0 0) center / var(--dw) var(--dh) no-repeat;
+}
+.gate__floor { border-top: calc(var(--dw) * .04) solid #4b3a2c; box-shadow: 0 -3px 0 #6d5644; }
+
+/* Kutchi lippan kaam: raised clay lines with little mirrors */
+.lippan {
+  position: absolute; top: 18%; height: 52%;
+  width: calc(var(--dw) * .62);
+  padding: 8px;
+  background: #f1e7d4;
+  box-shadow: 0 0 0 2px #d9c7a6, 0 8px 18px -10px rgba(60,35,15,.5);
+}
+.lippan svg { width: 100%; height: 100%; display: block; }
+.lippan--l { right: calc(100% + var(--dw) * .42); }
+.lippan--r { left: calc(100% + var(--dw) * .42); }
+.lippan .m { animation: glint 4.5s ease-in-out infinite; }
+@keyframes glint { 0%, 100% { fill: #c7d0d6; } 50% { fill: #ffffff; } }
+@media (max-width: 900px) { .lippan { display: none; } }
+@media (prefers-reduced-motion: reduce) { .lippan .m { animation: none; } }
+
+/* red-oxide floor in front of the door, laid back in 3D */
+.gate__floor {
+  position: absolute; top: 100%; left: 50%;
+  width: 300vw; height: 60vh; margin-left: -150vw;
+  background: linear-gradient(#6f2a1c, #8a3826 35%, #93402c);
+}
+.gate__floor svg.tiles { position: absolute; inset: 0; width: 100%; height: 100%; }
+.gate__rangoli {
+  position: absolute; left: 50%; top: 2%;
+  width: calc(var(--dw) * 1.15); aspect-ratio: 1;
+  transform: translateX(-50%) scaleY(.3); transform-origin: top center;
+  filter: saturate(.9);
+}
+.gate__rangoli svg { width: 100%; height: 100%; }
+
+.diya { position: absolute; bottom: -12px; width: 46px; height: 18px; }
+.diya--l { right: calc(100% + 26px); }
+.diya--r { left: calc(100% + 26px); }
+.diya::before {
+  content: ""; position: absolute; inset: 0;
+  background: radial-gradient(ellipse at 50% 0, #2a1208 0 35%, transparent 36%), linear-gradient(#b5522c, #7c2f15);
+  border-radius: 4px 4px 50% 50% / 4px 4px 100% 100%;
+}
+.diya__flame {
+  position: absolute; left: 50%; bottom: 12px; width: 12px; height: 24px; margin-left: -6px;
+  border-radius: 50% 50% 50% 50% / 65% 65% 35% 35%;
+  background: radial-gradient(ellipse at 50% 75%, #fff8d8 0 18%, #ffd25a 35%, #ff8a1c 70%, transparent 72%);
+  box-shadow: 0 0 22px 8px rgba(255,170,60,.45), 0 0 60px 20px rgba(255,150,40,.18);
+  transform-origin: 50% 90%;
+  animation: flame 1.6s ease-in-out infinite alternate;
+}
+.diya--r .diya__flame { animation-delay: -.7s; }
+@keyframes flame {
+  0% { transform: scale(1, 1) rotate(-2deg); }
+  40% { transform: scale(.94, 1.08) rotate(2deg); }
+  70% { transform: scale(1.04, .95) rotate(-1deg); }
+  100% { transform: scale(.97, 1.04) rotate(1.5deg); }
+}
+
+.gate__hint {
+  position: absolute; left: 0; right: 0; bottom: 2vh; text-align: center;
+  font: 500 13px var(--sans); letter-spacing: .18em; text-transform: uppercase; color: #f4ecdd;
+  text-shadow: 0 1px 6px rgba(0,0,0,.5);
+  pointer-events: none;
+}
+.gate__hint span { background: rgba(43,32,25,.55); padding: 6px 12px 5px; border-radius: 20px; }
+.gate__hint::after {
+  content: ""; display: block; width: 1.5px; height: 28px; margin: 10px auto 0;
+  background: currentColor; display: none; animation: hint 1.8s ease-in-out infinite;
+  transform-origin: top;
+}
+@keyframes hint { 0% { transform: scaleY(0) } 50% { transform: scaleY(1) } 100% { transform: scaleY(1); opacity: 0 } }
+.gate__skip {
+  position: absolute; top: 16px; right: 18px; z-index: 3;
+  font-size: 13.5px; color: #5d4d40; text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+@media (max-width: 600px) {
+  .gate__shubh { top: auto; bottom: 108%; writing-mode: horizontal-tb; font-size: 22px; }
+  .gate__shubh--l { right: 55%; }
+  .gate__shubh--r { left: 55%; }
+  .gate__lintel, .gate__toran { left: -8vw; right: -8vw; }
+  .gate__shubh { bottom: calc(100% + var(--dw) * .26); }
+  .diya--l { right: calc(100% + 8px); }
+  .diya--r { left: calc(100% + 8px); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .gate { height: 100vh; }
+  .gate__world, .gate__hint { display: none; }
+  .gate__welcome { opacity: 1; }
+  .gate__beyond img { transform: none; }
+  .gate__toran, .diya__flame { animation: none; }
+}
+
+/* =========================================================
+   Rangoli
+   ========================================================= */
+.rang { padding: 96px 0; background: var(--paper-2); }
+.rang__in { display: grid; grid-template-columns: 1fr 1.05fr; gap: 56px; align-items: center; }
+.rang__text > p:not(.sechead__title) { margin: 16px 0 24px; color: var(--ink-soft); }
+
+.rang__colors { border: 0; padding: 0; margin: 0 0 18px; display: flex; flex-wrap: wrap; gap: 8px; }
+.rang__colors legend, .rang__opts label { font: 600 12.5px var(--sans); letter-spacing: .14em; text-transform: uppercase; color: var(--ink-soft); }
+.rang__colors legend { margin-bottom: 10px; }
+.rang__colors label { position: relative; display: flex; flex-direction: column; align-items: center; gap: 4px; font-size: 12.5px; color: var(--ink-soft); cursor: pointer; width: 58px; }
+.rang__colors input { position: absolute; opacity: 0; }
+.rang__colors span {
+  width: 38px; height: 38px; border-radius: 50%;
+  background: radial-gradient(circle at 35% 30%, rgba(255,255,255,.35), transparent 45%), var(--c);
+  box-shadow: inset 0 -3px 6px rgba(0,0,0,.2), 0 0 0 1px rgba(43,32,25,.15);
+  transition: transform .15s;
+}
+.rang__colors input:checked + span { box-shadow: 0 0 0 3px var(--paper-2), 0 0 0 5px var(--ink); transform: scale(1.06); }
+.rang__colors input:focus-visible + span { outline: 2px solid var(--red); outline-offset: 5px; }
+
+.rang__opts { display: flex; gap: 22px; flex-wrap: wrap; margin-bottom: 22px; }
+.rang__opts select { margin-left: 8px; font: 500 15px var(--sans); text-transform: none; letter-spacing: 0; padding: 5px 8px; border: 1px solid var(--line); background: var(--paper); color: var(--ink); border-radius: 3px; }
+.rang__btns { display: flex; flex-wrap: wrap; gap: 10px; }
+.rang__btns button { cursor: pointer; }
+.rang__btns--small { margin-top: 14px; gap: 18px; }
+.rang__btns--small button { background: none; border: 0; padding: 0; font: 600 15px var(--sans); color: var(--red); border-bottom: 1.5px solid var(--haldi); }
+
+.rang__floor {
+  position: relative;
+  padding: 14px;
+  background: #5a2216;
+  box-shadow: 0 30px 50px -30px rgba(43,32,25,.7);
+}
+.rang__floor canvas { display: block; width: 100%; aspect-ratio: 1; touch-action: none; cursor: crosshair; }
+.rang__tip {
+  position: absolute; left: 0; right: 0; top: 50%; margin-top: 40px; text-align: center;
+  color: rgba(246,240,226,.7); font: italic 20px var(--serif); pointer-events: none; transition: opacity .4s;
+}
+.rang__tip.is-gone { opacity: 0; }
+@media (max-width: 860px) {
+  .rang { padding: 64px 0; }
+  .rang__in { grid-template-columns: 1fr; gap: 0; }
+  .rang__text { display: contents; }
+  .rang__floor { order: 1; margin: 4px 0 24px; padding: 8px; }
+  .rang__colors, .rang__opts, .rang__btns { order: 2; }
+}
+
+/* a photo that couldn't load: hide the broken-image icon, keep the space */
+img.is-missing { opacity: 0; }
+.mark__logo.is-missing { display: none; }
+
+</style>
 </head>
 <body>
 
@@ -23,7 +708,27 @@
 <section class="gate" id="gate" aria-label="Welcome to Hotel Natraj &amp; Resort">
   <div class="gate__stage">
     <div class="gate__beyond">
-      <img src="https://natrajhotel.co.in/images/uploads/586/3468_738hotel_natraj_resort_img__7_.jpg" alt="" fetchpriority="high">
+      <svg class="gate__dusk" viewBox="0 0 1600 900" preserveAspectRatio="xMidYMax slice" aria-hidden="true">
+        <defs>
+          <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0" stop-color="#3b3f6b"/><stop offset=".45" stop-color="#c8735a"/><stop offset=".72" stop-color="#f2b56b"/><stop offset="1" stop-color="#f7d79a"/>
+          </linearGradient>
+        </defs>
+        <rect width="1600" height="900" fill="url(#sky)"/>
+        <circle cx="1080" cy="610" r="70" fill="#fbe3a6" opacity=".9"/>
+        <path d="M0 650 Q200 610 420 640 T860 630 T1300 620 T1600 640 V900 H0Z" fill="#7a5a4a" opacity=".55"/>
+        <g fill="#2e2421">
+          <path d="M0 900V700q60-70 130-40 40-60 110-30 60-40 120 10 50 20 40 60H0z"/>
+          <path d="M1600 900V690q-70-80-150-40-50-60-120-20-70-30-110 30-40 20-20 60h400z"/>
+          <path d="M520 760h170l-85-60z M535 760h140v70H535z"/>
+          <path d="M760 770h200l-100-70z M778 770h164v60H778z"/>
+          <path d="M1010 760h170l-85-60z M1025 760h140v70h-140z"/>
+          <rect y="820" width="1600" height="80"/>
+        </g>
+        <g fill="#f7c66a"><rect x="590" y="775" width="16" height="20"/><rect x="852" y="785" width="16" height="20"/><rect x="1090" y="775" width="16" height="20"/></g>
+        <rect x="420" y="836" width="760" height="10" rx="5" fill="#9cc1c9" opacity=".55"/>
+      </svg>
+      <img src="images/586/3468_738hotel_natraj_resort_img__7_.jpg" alt="" fetchpriority="high">
       <div class="gate__welcome">
         <p class="gate__gu" lang="gu">પધારો</p>
         <p class="gate__gloss"><i>padhāro</i> — come in, you're welcome here</p>
@@ -31,6 +736,9 @@
     </div>
     <div class="gate__world">
       <div class="gate__doorway">
+        <div class="gate__wall"></div>
+        <div class="lippan lippan--l" aria-hidden="true"></div>
+        <div class="lippan lippan--r" aria-hidden="true"></div>
         <div class="gate__frame" title="Open the doors">
           <div class="leaf leaf--l">
             <div class="leaf__panels"><i></i><i></i><i></i><i></i><i></i><i></i></div>
@@ -65,7 +773,7 @@
 <header class="head" id="top">
   <div class="wrap head__in">
     <a class="mark" href="#top" aria-label="Hotel Natraj &amp; Resort, home">
-      <img class="mark__logo" src="https://natrajhotel.co.in/images/uploads/logos/174350195987logo.png" alt="Hotel Natraj &amp; Resort logo" width="52" height="52">
+      <img class="mark__logo" src="images/logos/174350195987logo.png" alt="Hotel Natraj &amp; Resort logo" width="52" height="52">
       <span class="mark__en">Hotel Natraj<br>&amp; Resort</span>
     </a>
     <button class="navbtn" aria-expanded="false" aria-controls="nav">Menu</button>
@@ -99,9 +807,9 @@
       </div>
       <figure class="hero__pic">
         <div class="arch">
-          <img src="https://natrajhotel.co.in/images/uploads/586/3468_738hotel_natraj_resort_img__7_.jpg" alt="Hotel Natraj &amp; Resort seen from the grounds" width="900" height="1100" fetchpriority="high">
+          <img src="images/586/3468_738hotel_natraj_resort_img__7_.jpg" alt="Hotel Natraj &amp; Resort seen from the grounds" width="900" height="1100" fetchpriority="high">
         </div>
-        <img class="hero__pic2" src="https://natrajhotel.co.in/images/uploads/586/7878hotel_natraj_resort__1_.JPG" alt="The swimming pool" loading="lazy" width="400" height="300">
+        <img class="hero__pic2" src="images/586/7878hotel_natraj_resort__1_.JPG" alt="The swimming pool" loading="lazy" width="400" height="300">
       </figure>
     </div>
   </section>
@@ -146,11 +854,11 @@
 
       <article class="room" role="tabpanel" id="c-modern" aria-labelledby="t-modern">
         <div class="room__pics" data-pics>
-          <img class="room__main" src="https://natrajhotel.co.in/images/uploads/586/3468_807hotel_natraj_resort_modern_cottage__3_.jpg" alt="Modern Cottage" loading="lazy">
+          <img class="room__main" src="images/586/3468_807hotel_natraj_resort_modern_cottage__3_.jpg" alt="Modern Cottage" loading="lazy">
           <div class="room__thumbs">
-            <button aria-label="Photo 1" aria-pressed="true"><img src="https://natrajhotel.co.in/images/uploads/586/3468_807hotel_natraj_resort_modern_cottage__3_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 2"><img src="https://natrajhotel.co.in/images/uploads/586/3468_909hotel_natraj_resort_modern_cottage__4_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 3"><img src="https://natrajhotel.co.in/images/uploads/586/3468_149hotel_natraj_resort_modern_cottage__5_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 1" aria-pressed="true"><img src="images/586/3468_807hotel_natraj_resort_modern_cottage__3_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 2"><img src="images/586/3468_909hotel_natraj_resort_modern_cottage__4_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 3"><img src="images/586/3468_149hotel_natraj_resort_modern_cottage__5_.jpg" alt="" loading="lazy"></button>
           </div>
         </div>
         <div class="room__text">
@@ -162,11 +870,11 @@
 
       <article class="room" role="tabpanel" id="c-modern-b" aria-labelledby="t-modern-b" hidden>
         <div class="room__pics" data-pics>
-          <img class="room__main" src="https://natrajhotel.co.in/images/uploads/586/3468_706hotel_natraj_resort_modern_cottage_with_balcony__4_.jpg" alt="Modern Cottage with balcony" loading="lazy">
+          <img class="room__main" src="images/586/3468_706hotel_natraj_resort_modern_cottage_with_balcony__4_.jpg" alt="Modern Cottage with balcony" loading="lazy">
           <div class="room__thumbs">
-            <button aria-label="Photo 1" aria-pressed="true"><img src="https://natrajhotel.co.in/images/uploads/586/3468_706hotel_natraj_resort_modern_cottage_with_balcony__4_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 2"><img src="https://natrajhotel.co.in/images/uploads/586/3468_296hotel_natraj_resort_modern_cottage_with_balcony__5_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 3"><img src="https://natrajhotel.co.in/images/uploads/586/3468_828hotel_natraj_resort_modern_cottage_with_balcony__7_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 1" aria-pressed="true"><img src="images/586/3468_706hotel_natraj_resort_modern_cottage_with_balcony__4_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 2"><img src="images/586/3468_296hotel_natraj_resort_modern_cottage_with_balcony__5_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 3"><img src="images/586/3468_828hotel_natraj_resort_modern_cottage_with_balcony__7_.jpg" alt="" loading="lazy"></button>
           </div>
         </div>
         <div class="room__text">
@@ -178,11 +886,11 @@
 
       <article class="room" role="tabpanel" id="c-village" aria-labelledby="t-village" hidden>
         <div class="room__pics" data-pics>
-          <img class="room__main" src="https://natrajhotel.co.in/images/uploads/586/3468_670hotel_natraj_resort_village_cottage__3_.jpg" alt="Village Cottage" loading="lazy">
+          <img class="room__main" src="images/586/3468_670hotel_natraj_resort_village_cottage__3_.jpg" alt="Village Cottage" loading="lazy">
           <div class="room__thumbs">
-            <button aria-label="Photo 1" aria-pressed="true"><img src="https://natrajhotel.co.in/images/uploads/586/3468_670hotel_natraj_resort_village_cottage__3_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 2"><img src="https://natrajhotel.co.in/images/uploads/586/3468_140hotel_natraj_resort_village_cottage__4_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 3"><img src="https://natrajhotel.co.in/images/uploads/586/3468_524hotel_natraj_resort_village_cottage__6_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 1" aria-pressed="true"><img src="images/586/3468_670hotel_natraj_resort_village_cottage__3_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 2"><img src="images/586/3468_140hotel_natraj_resort_village_cottage__4_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 3"><img src="images/586/3468_524hotel_natraj_resort_village_cottage__6_.jpg" alt="" loading="lazy"></button>
           </div>
         </div>
         <div class="room__text">
@@ -194,10 +902,10 @@
 
       <article class="room" role="tabpanel" id="c-village-b" aria-labelledby="t-village-b" hidden>
         <div class="room__pics" data-pics>
-          <img class="room__main" src="https://natrajhotel.co.in/images/uploads/586/3468_606hotel_natraj_resort_village_cottage_with_balcony__7_.jpg" alt="Village Cottage with balcony" loading="lazy">
+          <img class="room__main" src="images/586/3468_606hotel_natraj_resort_village_cottage_with_balcony__7_.jpg" alt="Village Cottage with balcony" loading="lazy">
           <div class="room__thumbs">
-            <button aria-label="Photo 1" aria-pressed="true"><img src="https://natrajhotel.co.in/images/uploads/586/3468_606hotel_natraj_resort_village_cottage_with_balcony__7_.jpg" alt="" loading="lazy"></button>
-            <button aria-label="Photo 2"><img src="https://natrajhotel.co.in/images/uploads/586/3468_681hotel_natraj_resort_village_cottage_with_balcony__9_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 1" aria-pressed="true"><img src="images/586/3468_606hotel_natraj_resort_village_cottage_with_balcony__7_.jpg" alt="" loading="lazy"></button>
+            <button aria-label="Photo 2"><img src="images/586/3468_681hotel_natraj_resort_village_cottage_with_balcony__9_.jpg" alt="" loading="lazy"></button>
           </div>
         </div>
         <div class="room__text">
@@ -227,19 +935,19 @@
     </div>
     <div class="fac">
       <figure class="fac__i fac__i--tall">
-        <img src="https://natrajhotel.co.in/images/uploads/586/7878hotel_natraj_resort__1_.JPG" alt="Swimming pool" loading="lazy">
+        <img src="images/586/7878hotel_natraj_resort__1_.JPG" alt="Swimming pool" loading="lazy">
         <figcaption><b>Swimming pool</b><span lang="gu">સ્વિમિંગ પૂલ</span></figcaption>
       </figure>
       <figure class="fac__i">
-        <img src="https://natrajhotel.co.in/images/uploads/538/2531restaurant_.jpg" alt="The restaurant" loading="lazy">
+        <img src="images/538/2531restaurant_.jpg" alt="The restaurant" loading="lazy">
         <figcaption><b>Restaurant</b><span lang="gu">ભોજનાલય</span></figcaption>
       </figure>
       <figure class="fac__i">
-        <img src="https://natrajhotel.co.in/images/uploads/586/3832hotel_natraj_resort_gaming_zone_img__4_.jpg" alt="Indoor game zone" loading="lazy">
+        <img src="images/586/3832hotel_natraj_resort_gaming_zone_img__4_.jpg" alt="Indoor game zone" loading="lazy">
         <figcaption><b>Indoor game zone</b><span lang="gu">ઇન્ડોર રમતો</span></figcaption>
       </figure>
       <figure class="fac__i fac__i--wide">
-        <img src="https://natrajhotel.co.in/images/uploads/538/3924outdoor_games__3_.jpg" alt="Outdoor games area" loading="lazy">
+        <img src="images/538/3924outdoor_games__3_.jpg" alt="Outdoor games area" loading="lazy">
         <figcaption><b>Outdoor games</b><span lang="gu">મેદાની રમતો</span></figcaption>
       </figure>
     </div>
@@ -257,8 +965,8 @@
         <a class="btn btn--haldi" href="https://wa.me/917802903232?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20the%20banquet%20hall%20and%20wedding%20venue.">Ask about a function</a>
       </div>
       <div class="wed__pics">
-        <img src="https://natrajhotel.co.in/images/uploads/586/3397hotel_natraj_resort_img__5_.jpg" alt="Wedding venue" loading="lazy">
-        <img src="https://natrajhotel.co.in/images/uploads/586/2138hotel_natraj_resort_restaurant_img__1_.jpg" alt="Banquet hall" loading="lazy">
+        <img src="images/586/3397hotel_natraj_resort_img__5_.jpg" alt="Wedding venue" loading="lazy">
+        <img src="images/586/2138hotel_natraj_resort_restaurant_img__1_.jpg" alt="Banquet hall" loading="lazy">
       </div>
     </div>
     <div class="wrap words">
@@ -376,7 +1084,7 @@
 <footer class="foot">
   <div class="wrap foot__in">
     <div>
-      <img class="foot__logo" src="https://natrajhotel.co.in/images/uploads/logos/174350195987logo.png" alt="Hotel Natraj &amp; Resort logo" width="72" height="72" loading="lazy">
+      <img class="foot__logo" src="images/logos/174350195987logo.png" alt="Hotel Natraj &amp; Resort logo" width="72" height="72" loading="lazy">
       <p class="foot__gu" lang="gu">આવજો, ફરી પધારજો.</p>
       <p class="foot__gloss">Go well, and come again.</p>
     </div>
@@ -395,8 +1103,529 @@
   <a href="https://wa.me/917802903232?text=Hello%20Hotel%20Natraj%20%26%20Resort%2C%20I%20would%20like%20to%20enquire%20about%20a%20stay.">WhatsApp</a>
 </div>
 
-<script src="js/gate.js"></script>
-<script src="js/rangoli.js"></script>
-<script src="js/main.js"></script>
+<script>
+// Entrance: the doors open and the camera walks through as the visitor scrolls.
+(function () {
+  var gate = document.getElementById('gate');
+  if (!gate) return;
+
+  var world = gate.querySelector('.gate__world');
+  var doorway = gate.querySelector('.gate__doorway');
+  var frame = gate.querySelector('.gate__frame');
+  var left = gate.querySelector('.leaf--l');
+  var right = gate.querySelector('.leaf--r');
+  var beyond = gate.querySelector('.gate__beyond img');
+  var dusk = gate.querySelector('.gate__dusk');
+  var welcome = gate.querySelector('.gate__welcome');
+  var hint = gate.querySelector('.gate__hint');
+  var skip = gate.querySelector('.gate__skip');
+
+  // Floor rangoli in front of the door, drawn as SVG.
+  (function floorRangoli() {
+    var host = document.getElementById('floorRangoli');
+    var out = ['<svg viewBox="-100 -100 200 200" aria-hidden="true">'];
+    var rings = [
+      { n: 8, r: 0, len: 30, w: 11, c: '#f2ad1d' },
+      { n: 8, r: 0, len: 22, w: 7, c: '#d42a3c', rot: 22.5 },
+      { n: 16, r: 36, len: 22, w: 8, c: '#2f63c4' },
+      { n: 16, r: 36, len: 14, w: 4, c: '#f6f0e2' },
+      { n: 24, r: 64, len: 18, w: 7, c: '#ee6a1c', rot: 7.5 },
+      { n: 24, r: 64, len: 10, w: 3, c: '#f6f0e2', rot: 7.5 }
+    ];
+    rings.forEach(function (g) {
+      for (var i = 0; i < g.n; i++) {
+        var a = (360 / g.n) * i + (g.rot || 0);
+        out.push('<ellipse cx="0" cy="' + -(g.r + g.len) + '" rx="' + g.w + '" ry="' + g.len +
+          '" fill="' + g.c + '" transform="rotate(' + a + ')"/>');
+      }
+    });
+    out.push('<circle r="8" fill="#3a9a48"/><circle r="3" fill="#f6f0e2"/>');
+    for (var i = 0; i < 48; i++) {
+      var a = i * 7.5 * Math.PI / 180;
+      out.push('<circle cx="' + (95 * Math.cos(a)).toFixed(1) + '" cy="' + (95 * Math.sin(a)).toFixed(1) + '" r="2.4" fill="#f6f0e2"/>');
+    }
+    out.push('</svg>');
+    host.innerHTML = out.join('');
+  })();
+
+  // Floor tiles drawn in perspective, converging behind the door.
+  (function tiles() {
+    var floor = gate.querySelector('.gate__floor');
+    var o = ['<svg class="tiles" viewBox="0 0 3000 600" preserveAspectRatio="none" aria-hidden="true"><g stroke="rgba(0,0,0,.22)" stroke-width="2" vector-effect="non-scaling-stroke">'];
+    for (var i = -40; i <= 40; i++) o.push('<line x1="' + (1500 + i * 30) + '" y1="0" x2="' + (1500 + i * 150) + '" y2="600"/>');
+    for (var y = 14, step = 16; y < 600; step *= 1.32, y += step) o.push('<line x1="0" y1="' + y.toFixed(1) + '" x2="3000" y2="' + y.toFixed(1) + '"/>');
+    o.push('</g></svg>');
+    floor.insertAdjacentHTML('afterbegin', o.join(''));
+  })();
+
+  // Lippan panels: lattice of diamonds, each with a mirror in the middle.
+  (function lippan() {
+    var W = 120, H = 180, o = ['<svg viewBox="0 0 ' + W + ' ' + H + '" preserveAspectRatio="none">'];
+    o.push('<rect width="' + W + '" height="' + H + '" fill="#a8653d"/>');
+    o.push('<g fill="none" stroke="#f6efe2" stroke-width="2.2" stroke-linejoin="round">');
+    o.push('<rect x="5" y="5" width="' + (W - 10) + '" height="' + (H - 10) + '"/><rect x="10" y="10" width="' + (W - 20) + '" height="' + (H - 20) + '"/>');
+    var cols = 3, rows = 5, cw = (W - 20) / cols, ch = (H - 20) / rows, mirrors = [];
+    for (var r = 0; r < rows; r++) for (var c = 0; c < cols; c++) {
+      var x = 10 + c * cw + cw / 2, y = 10 + r * ch + ch / 2;
+      o.push('<path d="M' + x + ' ' + (y - ch / 2) + 'L' + (x + cw / 2) + ' ' + y + 'L' + x + ' ' + (y + ch / 2) + 'L' + (x - cw / 2) + ' ' + y + 'Z"/>');
+      o.push('<path d="M' + x + ' ' + (y - ch / 3.2) + 'L' + (x + cw / 3.2) + ' ' + y + 'L' + x + ' ' + (y + ch / 3.2) + 'L' + (x - cw / 3.2) + ' ' + y + 'Z"/>');
+      mirrors.push([x, y, 4.2]);
+      mirrors.push([10 + c * cw, 10 + r * ch, 2.4]);
+    }
+    o.push('</g>');
+    mirrors.forEach(function (m, i) {
+      o.push('<circle cx="' + m[0] + '" cy="' + m[1] + '" r="' + (m[2] + 1.6) + '" fill="#f6efe2"/>');
+      o.push('<circle class="m" style="animation-delay:' + (-(i * 0.73) % 4.5).toFixed(2) + 's" cx="' + m[0] + '" cy="' + m[1] + '" r="' + m[2] + '" fill="#c7d0d6"/>');
+    });
+    o.push('</svg>');
+    var svg = o.join('');
+    gate.querySelectorAll('.lippan').forEach(function (el) { el.innerHTML = svg; });
+  })();
+
+  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+    document.body.classList.add('past-gate');
+    return;
+  }
+
+  var maxScale = 3;
+  function measure() {
+    world.style.transform = 'none';
+    var r = frame.getBoundingClientRect();
+    var vw = window.innerWidth, vh = window.innerHeight;
+    // big enough that the doorway swallows the whole screen
+    maxScale = Math.max(vw / r.width, vh / r.height) * 1.25;
+    var cx = r.left + r.width / 2, cy = r.top + r.height / 2;
+    world.style.transformOrigin = cx + 'px ' + cy + 'px';
+    update();
+  }
+
+  function clamp(x) { return x < 0 ? 0 : x > 1 ? 1 : x; }
+  function ease(t) { return t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2; }
+
+  var ticking = false;
+  function update() {
+    ticking = false;
+    var total = gate.offsetHeight - window.innerHeight;
+    var p = clamp((window.scrollY - gate.offsetTop) / total);
+
+    var open = ease(clamp(p / .5));
+    var zoom = ease(clamp((p - .3) / .65));
+
+    left.style.transform = 'rotateY(' + (-108 * open) + 'deg)';
+    right.style.transform = 'rotateY(' + (108 * open) + 'deg)';
+    // leaves darken as they turn away from the light
+    left.style.filter = right.style.filter = 'brightness(' + (1 - open * .45) + ')';
+
+    var s = 1 + (maxScale - 1) * zoom;
+    world.style.transform = 'scale(' + s + ')';
+    world.style.opacity = String(1 - clamp((p - .82) / .12));
+    world.style.visibility = p > .95 ? 'hidden' : 'visible';
+
+    beyond.style.transform = 'scale(' + (1.15 - .15 * zoom) + ')';
+    dusk.style.transform = beyond.style.transform;
+    welcome.style.opacity = String(clamp((p - .62) / .25));
+    welcome.style.transform = 'translateY(' + (20 - 20 * clamp((p - .62) / .25)) + 'px)';
+    hint.style.opacity = String(1 - clamp(p * 6));
+    skip.style.opacity = String(1 - clamp(p * 4));
+    document.body.classList.toggle('past-gate', p >= .98);
+  }
+
+  window.addEventListener('scroll', function () {
+    if (!ticking) { ticking = true; requestAnimationFrame(update); }
+  }, { passive: true });
+  window.addEventListener('resize', measure);
+
+  // a click or tap on the door walks you in
+  frame.addEventListener('click', function () {
+    window.scrollTo({ top: gate.offsetTop + gate.offsetHeight - window.innerHeight, behavior: 'smooth' });
+  });
+
+  measure();
+})();
+</script>
+<script>
+// Rangoli floor: whatever you draw is mirrored around the centre, in powder.
+(function () {
+  var canvas = document.getElementById('rangCanvas');
+  if (!canvas) return;
+  var ctx = canvas.getContext('2d');
+  var tip = document.getElementById('rangTip');
+  var sizeSel = document.getElementById('rangSize');
+  var symSel = document.getElementById('rangSym');
+  var FLOOR = '#7e3020';
+
+  var W = 0, dpr = 1, drawn = false, autoRun = 0;
+
+  function color() {
+    return document.querySelector('input[name="rc"]:checked').value;
+  }
+
+  // Red-oxide floor with a little mottling, then faint chalk guide circles.
+  function paintFloor() {
+    ctx.fillStyle = FLOOR;
+    ctx.fillRect(0, 0, W, W);
+    for (var i = 0; i < 2600; i++) {
+      ctx.fillStyle = Math.random() < .5 ? 'rgba(0,0,0,.06)' : 'rgba(255,200,170,.05)';
+      var r = Math.random() * 3 * dpr;
+      ctx.beginPath();
+      ctx.arc(Math.random() * W, Math.random() * W, r, 0, 6.283);
+      ctx.fill();
+    }
+    ctx.strokeStyle = 'rgba(246,240,226,.14)';
+    ctx.lineWidth = dpr;
+    ctx.setLineDash([2 * dpr, 6 * dpr]);
+    [.15, .3, .45].forEach(function (f) {
+      ctx.beginPath();
+      ctx.arc(W / 2, W / 2, W * f, 0, 6.283);
+      ctx.stroke();
+    });
+    ctx.setLineDash([]);
+  }
+
+  function setup() {
+    var keep = drawn ? canvas.toDataURL() : null;
+    dpr = Math.min(window.devicePixelRatio || 1, 2);
+    W = Math.round(canvas.clientWidth * dpr);
+    canvas.width = canvas.height = W;
+    paintFloor();
+    if (keep) {
+      var img = new Image();
+      img.onload = function () { ctx.drawImage(img, 0, 0, W, W); };
+      img.src = keep;
+    }
+  }
+
+  // One pinch of powder at (x, y), relative to the centre, copied N ways and mirrored.
+  function pinch(x, y, c, size) {
+    var n = +symSel.value;
+    var cx = W / 2, cy = W / 2;
+    ctx.fillStyle = c;
+    for (var k = 0; k < 7; k++) {
+      var a = Math.random() * 6.283, d = Math.random() * size * dpr;
+      var px = x + Math.cos(a) * d, py = y + Math.sin(a) * d;
+      var r = (.5 + Math.random() * .9) * dpr * (size > 8 ? 1.4 : 1);
+      ctx.globalAlpha = .55 + Math.random() * .45;
+      for (var i = 0; i < n; i++) {
+        var t = (6.283 / n) * i, co = Math.cos(t), si = Math.sin(t);
+        ctx.beginPath();
+        ctx.arc(cx + px * co - py * si, cy + px * si + py * co, r, 0, 6.283);
+        ctx.arc(cx + px * co + py * si, cy + px * si - py * co, r, 0, 6.283);
+        ctx.fill();
+      }
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  function line(x0, y0, x1, y1, c, size) {
+    var dist = Math.hypot(x1 - x0, y1 - y0);
+    var steps = Math.max(1, Math.ceil(dist / (1.6 * dpr)));
+    for (var i = 1; i <= steps; i++) {
+      var t = i / steps;
+      pinch(x0 + (x1 - x0) * t, y0 + (y1 - y0) * t, c, size);
+    }
+  }
+
+  function markDrawn() {
+    if (!drawn) { drawn = true; tip.classList.add('is-gone'); }
+  }
+
+  // --- drawing with mouse / finger ---
+  var last = null;
+  function pos(e) {
+    var r = canvas.getBoundingClientRect();
+    return { x: (e.clientX - r.left) * dpr - W / 2, y: (e.clientY - r.top) * dpr - W / 2 };
+  }
+  canvas.addEventListener('pointerdown', function (e) {
+    autoRun++;
+    canvas.setPointerCapture(e.pointerId);
+    last = pos(e);
+    pinch(last.x, last.y, color(), +sizeSel.value);
+    markDrawn();
+  });
+  canvas.addEventListener('pointermove', function (e) {
+    if (!last) return;
+    var p = pos(e);
+    line(last.x, last.y, p.x, p.y, color(), +sizeSel.value);
+    last = p;
+  });
+  ['pointerup', 'pointercancel', 'pointerleave'].forEach(function (ev) {
+    canvas.addEventListener(ev, function () { last = null; });
+  });
+
+  // --- "Make one for me": builds a design ring by ring, as a person would ---
+  var PALETTE = ['#f6f0e2', '#f2ad1d', '#ee6a1c', '#d42a3c', '#e2558e', '#3a9a48', '#2f63c4'];
+  function pick(a) { return a[Math.floor(Math.random() * a.length)]; }
+
+  function plan() {
+    var R = W * .47, strokes = [];
+    var n = +symSel.value, sector = Math.PI / n; // one mirrored half-sector
+    var r = R * .06;
+    // centre bud
+    strokes.push({ c: pick(PALETTE), size: 9, pts: arc(0, 0, r, 0, sector, 6) });
+    while (r < R * .9) {
+      var band = R * (.1 + Math.random() * .1);
+      var c = pick(PALETTE), kind = Math.floor(Math.random() * 4);
+      if (kind === 0) { // petal
+        strokes.push({ c: c, size: 6, pts: petal(r, r + band, sector) });
+        strokes.push({ c: pick(PALETTE), size: 3, pts: petal(r + band * .2, r + band * .75, sector * .55) });
+      } else if (kind === 1) { // ring of dots
+        for (var i = 0; i <= 2; i++) {
+          var a = sector * i / 2, rr = r + band / 2;
+          strokes.push({ c: c, size: 6, pts: [[rr * Math.cos(a), rr * Math.sin(a)]] });
+        }
+      } else if (kind === 2) { // wave
+        var pts = [];
+        for (var j = 0; j <= 16; j++) {
+          var t = j / 16, a2 = sector * t;
+          var rr2 = r + band / 2 + Math.sin(t * Math.PI) * band * .4;
+          pts.push([rr2 * Math.cos(a2), rr2 * Math.sin(a2)]);
+        }
+        strokes.push({ c: c, size: 4, pts: pts });
+      } else { // solid band
+        strokes.push({ c: c, size: 10, pts: arc(0, 0, r + band / 2, 0, sector, 10) });
+        strokes.push({ c: '#f6f0e2', size: 1.6, pts: arc(0, 0, r + band / 2, 0, sector, 10) });
+      }
+      r += band;
+    }
+    strokes.push({ c: '#f6f0e2', size: 2, pts: arc(0, 0, R * .93, 0, sector, 12) });
+    return strokes;
+  }
+  function arc(cx, cy, r, a0, a1, steps) {
+    var pts = [];
+    for (var i = 0; i <= steps; i++) {
+      var a = a0 + (a1 - a0) * i / steps;
+      pts.push([cx + r * Math.cos(a), cy + r * Math.sin(a)]);
+    }
+    return pts;
+  }
+  function petal(r0, r1, half) {
+    var pts = [];
+    for (var i = 0; i <= 14; i++) {
+      var t = i / 14;
+      var rr = r0 + (r1 - r0) * Math.sin(t * Math.PI / 2);
+      var a = half * (1 - t) * Math.sin(t * Math.PI) * 1.2;
+      pts.push([rr * Math.cos(a), rr * Math.sin(a)]);
+    }
+    return pts;
+  }
+
+  function autoDraw() {
+    var run = ++autoRun;
+    paintFloor();
+    markDrawn();
+    var strokes = plan(), s = 0, i = 0;
+    (function step() {
+      if (run !== autoRun) return;
+      for (var k = 0; k < 3 && s < strokes.length; k++) {
+        var st = strokes[s], p = st.pts;
+        if (p.length === 1) { pinch(p[0][0], p[0][1], st.c, st.size); s++; i = 0; continue; }
+        line(p[i][0], p[i][1], p[i + 1][0], p[i + 1][1], st.c, st.size);
+        i++;
+        if (i >= p.length - 1) { s++; i = 0; }
+      }
+      if (s < strokes.length) requestAnimationFrame(step);
+    })();
+  }
+
+  document.getElementById('rangAuto').addEventListener('click', autoDraw);
+  document.getElementById('rangClear').addEventListener('click', function () {
+    autoRun++;
+    paintFloor();
+    drawn = false;
+    tip.classList.remove('is-gone');
+  });
+
+  // --- save / share, with a small signature at the bottom ---
+  function exportBlob(cb) {
+    var out = document.createElement('canvas');
+    var pad = Math.round(W * .1);
+    out.width = W; out.height = W + pad;
+    var o = out.getContext('2d');
+    o.fillStyle = '#5a2216';
+    o.fillRect(0, 0, out.width, out.height);
+    o.drawImage(canvas, 0, 0);
+    o.fillStyle = '#f4ecdd';
+    o.font = '500 ' + Math.round(pad * .34) + 'px Rasa, Georgia, serif';
+    o.textAlign = 'center';
+    o.fillText('Hotel Natraj & Resort · Delwad, Gujarat', W / 2, W + pad * .62);
+    out.toBlob(cb, 'image/png');
+  }
+  document.getElementById('rangSave').addEventListener('click', function () {
+    exportBlob(function (b) {
+      var a = document.createElement('a');
+      a.href = URL.createObjectURL(b);
+      a.download = 'my-rangoli-natraj.png';
+      a.click();
+      setTimeout(function () { URL.revokeObjectURL(a.href); }, 2000);
+    });
+  });
+
+  var shareBtn = document.getElementById('rangShare');
+  try {
+    var probe = new File([''], 'x.png', { type: 'image/png' });
+    if (navigator.canShare && navigator.canShare({ files: [probe] })) shareBtn.hidden = false;
+  } catch (e) {}
+  shareBtn.addEventListener('click', function () {
+    exportBlob(function (b) {
+      var f = new File([b], 'my-rangoli-natraj.png', { type: 'image/png' });
+      navigator.share({ files: [f], text: 'I made this rangoli for Hotel Natraj & Resort 🪔' }).catch(function () {});
+    });
+  });
+
+  var rt;
+  window.addEventListener('resize', function () {
+    clearTimeout(rt);
+    rt = setTimeout(function () { if (Math.round(canvas.clientWidth * dpr) !== W) setup(); }, 200);
+  });
+  setup();
+})();
+</script>
+<script>
+(function () {
+  var IMG = 'images/';
+  var ORIGIN = 'Hotel Natraj & Resort, Delwad, Gandhinagar-Mahudi Highway Road, Ta. Mansa, Dist. Gandhinagar, Gujarat';
+
+  // Mobile menu
+  var navBtn = document.querySelector('.navbtn');
+  var nav = document.getElementById('nav');
+  navBtn.addEventListener('click', function () {
+    var open = navBtn.getAttribute('aria-expanded') === 'true';
+    navBtn.setAttribute('aria-expanded', String(!open));
+    nav.classList.toggle('is-open', !open);
+  });
+  nav.addEventListener('click', function (e) {
+    if (e.target.tagName === 'A') {
+      navBtn.setAttribute('aria-expanded', 'false');
+      nav.classList.remove('is-open');
+    }
+  });
+
+  // Cottage tabs
+  var tabs = Array.prototype.slice.call(document.querySelectorAll('[role="tab"]'));
+  function selectTab(tab) {
+    tabs.forEach(function (t) {
+      var on = t === tab;
+      t.setAttribute('aria-selected', String(on));
+      t.tabIndex = on ? 0 : -1;
+      document.getElementById(t.getAttribute('aria-controls')).hidden = !on;
+    });
+  }
+  tabs.forEach(function (t, i) {
+    t.addEventListener('click', function () { selectTab(t); });
+    t.addEventListener('keydown', function (e) {
+      var d = e.key === 'ArrowRight' ? 1 : e.key === 'ArrowLeft' ? -1 : 0;
+      if (!d) return;
+      var next = tabs[(i + d + tabs.length) % tabs.length];
+      selectTab(next);
+      next.focus();
+    });
+  });
+
+  // Cottage photo thumbnails
+  document.querySelectorAll('[data-pics]').forEach(function (box) {
+    var main = box.querySelector('.room__main');
+    var btns = box.querySelectorAll('.room__thumbs button');
+    btns.forEach(function (b) {
+      b.addEventListener('click', function () {
+        main.src = b.querySelector('img').src;
+        btns.forEach(function (x) { x.setAttribute('aria-pressed', String(x === b)); });
+      });
+    });
+  });
+
+  // Gallery
+  var gallery = [
+    ['The grounds', ['586/3468_738hotel_natraj_resort_img__7_.jpg', '586/3468_3hotel_natraj_resort_img__12_.jpg', '586/3468_3hotel_natraj_resort_img__13_.jpg']],
+    ['Restaurant', ['586/3468_613hotel_natraj_resort_restaurant_img__1_.jpg', '586/3468_286hotel_natraj_resort_restaurant_img__2_.jpg', '586/3468_451hotel_natraj_resort_restaurant_img__3_.jpg', '586/3468_155hotel_natraj_resort_restaurant_img__4_.jpg']],
+    ['Modern Cottage', ['586/3468_178hotel_natraj_resort_modern_cottage__4_.jpg', '586/3468_543hotel_natraj_resort_modern_cottage__5_.jpg', '586/3468_986hotel_natraj_resort_modern_cottage__11_.jpg']],
+    ['Modern, with balcony', ['586/3468_52hotel_natraj_resort_modern_cottage_with_balcony__2_.jpg', '586/3468_172hotel_natraj_resort_modern_cottage_with_balcony__4_.jpg', '586/3468_586hotel_natraj_resort_modern_cottage_with_balcony__7_.jpg']],
+    ['Village Cottage', ['586/3468_225hotel_natraj_resort_village_cottage__3_.jpg', '586/3468_679hotel_natraj_resort_village_cottage__4_.jpg', '586/3468_555hotel_natraj_resort_village_cottage__6_.jpg', '586/3468_123hotel_natraj_resort_village_cottage__11_.jpg']],
+    ['Village, with balcony', ['586/3468_368hotel_natraj_resort_village_cottage_with_balcony__1_.JPG', '586/3468_247hotel_natraj_resort_village_cottage_with_balcony__2_.JPG', '586/3468_531hotel_natraj_resort_village_cottage_with_balcony__7_.jpg']],
+    ['Game zone', ['586/3468_316hotel_natraj_resort_gaming_zone_img__2_.jpg', '586/3468_871hotel_natraj_resort_gaming_zone_img__4_.jpg', '586/3468_949hotel_natraj_resort_gaming_zone_img__5_.jpg']]
+  ];
+  var photos = [];
+  gallery.forEach(function (g) {
+    g[1].forEach(function (src) { photos.push({ cat: g[0], src: IMG + src }); });
+  });
+
+  var grid = document.getElementById('galGrid');
+  var filter = document.getElementById('galFilter');
+  var shown = photos;
+
+  function renderGallery(cat) {
+    shown = cat ? photos.filter(function (p) { return p.cat === cat; }) : photos;
+    grid.innerHTML = '';
+    shown.forEach(function (p, i) {
+      var b = document.createElement('button');
+      b.className = 'gal__item';
+      b.setAttribute('aria-label', 'Open photo: ' + p.cat);
+      b.innerHTML = '<img loading="lazy" alt="' + p.cat + '" src="' + p.src + '">';
+      b.addEventListener('click', function () { openLb(i); });
+      grid.appendChild(b);
+    });
+  }
+  ['All'].concat(gallery.map(function (g) { return g[0]; })).forEach(function (name, i) {
+    var c = document.createElement('button');
+    c.textContent = name;
+    c.setAttribute('aria-pressed', String(i === 0));
+    c.addEventListener('click', function () {
+      filter.querySelectorAll('button').forEach(function (x) { x.setAttribute('aria-pressed', String(x === c)); });
+      renderGallery(i === 0 ? null : name);
+    });
+    filter.appendChild(c);
+  });
+  renderGallery(null);
+
+  // Lightbox
+  var lb = document.getElementById('lb');
+  var lbImg = lb.querySelector('img');
+  var lbCap = lb.querySelector('.lb__cap');
+  var cur = 0;
+  function show(i) {
+    cur = (i + shown.length) % shown.length;
+    lbImg.src = shown[cur].src;
+    lbImg.alt = shown[cur].cat;
+    lbCap.textContent = shown[cur].cat + '  ·  ' + (cur + 1) + ' / ' + shown.length;
+  }
+  function openLb(i) {
+    show(i);
+    if (typeof lb.showModal === 'function') lb.showModal();
+    else lb.setAttribute('open', '');
+  }
+  lb.querySelector('.lb__x').addEventListener('click', function () { lb.close(); });
+  lb.querySelector('.lb__prev').addEventListener('click', function () { show(cur - 1); });
+  lb.querySelector('.lb__next').addEventListener('click', function () { show(cur + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) lb.close(); });
+  lb.addEventListener('keydown', function (e) {
+    if (e.key === 'ArrowRight') show(cur + 1);
+    if (e.key === 'ArrowLeft') show(cur - 1);
+  });
+
+  // Nearby sights
+  var sights = [
+    ['Swaminarayan Akshardham', 'અક્ષરધામ', '586/753a1.jpeg'],
+    ['Adalaj Stepwell', 'અડાલજની વાવ', '586/609a5.jpg'],
+    ['Indroda Nature Park', 'ઇન્દ્રોડા પાર્ક', '586/883a4.jpg'],
+    ['Sarita Udyan', 'સરિતા ઉદ્યાન', '586/593a2.jpg'],
+    ['Punit Van', 'પુનિત વન', '586/82a3.png']
+  ];
+  var list = document.getElementById('sights');
+  sights.forEach(function (s) {
+    var url = 'https://www.google.com/maps/dir/?api=1&origin=' + encodeURIComponent(ORIGIN) +
+      '&destination=' + encodeURIComponent(s[0] + ', Gandhinagar, Gujarat');
+    var li = document.createElement('li');
+    li.innerHTML = '<img loading="lazy" alt="" src="' + IMG + s[2] + '">' +
+      '<div><b>' + s[0] + '</b><span lang="gu">' + s[1] + '</span></div>' +
+      '<a href="' + url + '" target="_blank" rel="noopener">Route</a>';
+    list.appendChild(li);
+  });
+
+  // Header edge once scrolled
+  var head = document.querySelector('.head');
+  window.addEventListener('scroll', function () {
+    head.classList.toggle('is-stuck', window.scrollY > 40);
+  }, { passive: true });
+})();
+</script>
 </body>
 </html>
