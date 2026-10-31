@@ -18,3 +18,14 @@ git add images
 git commit -m "Add photos"
 git push
 ```
+
+## 3D entrance
+
+The landing scene is real 3D (WebGL, three.js). It shows the haveli gateway, the doors opening, and a walk into the courtyard. The source is `src/scene.js`. `js/scene.js` is the built file the page loads. To rebuild it after editing:
+
+```
+npm i three@0.187.0 esbuild
+npx esbuild src/scene.js --bundle --minify --format=iife --outfile=js/scene.js
+```
+
+On devices without WebGL, or with reduced motion turned on, the page falls back to the flat CSS door.

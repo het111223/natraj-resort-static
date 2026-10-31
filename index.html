@@ -647,6 +647,19 @@ h1, h2, h3, p { margin: 0; }
   .gate__toran, .diya__flame { animation: none; }
 }
 
+
+/* real 3D entrance (WebGL); the CSS door above stays as the fallback */
+.gate__gl { position: absolute; inset: 0; width: 100%; height: 100%; display: block; z-index: 2; cursor: pointer; }
+.gate.is-3d .gate__world, .gate.is-3d .gate__beyond img, .gate.is-3d .gate__dusk { display: none; }
+.gate.is-3d .gate__beyond::after { display: none; }
+.gate__welcome { z-index: 5; pointer-events: none; }
+.gate__hint, .gate__skip { z-index: 6; }
+.gate.is-3d .gate__welcome::before {
+  content: ""; position: absolute; left: 50%; top: 50%; width: min(900px, 120vw); height: 340px;
+  transform: translate(-50%, -50%); z-index: -1;
+  background: radial-gradient(closest-side, rgba(25,15,10,.45), transparent);
+}
+
 /* =========================================================
    Rangoli
    ========================================================= */
@@ -1627,5 +1640,6 @@ img.is-missing { opacity: 0; }
   }, { passive: true });
 })();
 </script>
+<script src="js/scene.js" defer></script>
 </body>
 </html>
