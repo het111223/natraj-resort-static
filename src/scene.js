@@ -15,7 +15,9 @@ const gate = document.getElementById('gate');
 const stage = gate && gate.querySelector('.gate__stage');
 const reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-if (stage && !reduced && webglOK()) {
+// The doors still open as you scroll when the OS asks for reduced motion;
+// only the drifting camera and mouse parallax are switched off.
+if (stage && webglOK()) {
   document.fonts.load('600 120px Rasa').catch(() => {}).finally(start);
 }
 
@@ -608,10 +610,10 @@ function start() {
     look.copy(tgtPath.getPointAt(u));
     pointer.sx += (pointer.x - pointer.sx) * .05;
     pointer.sy += (pointer.y - pointer.sy) * .05;
-    const sway = 1 - p * .6;
-    camera.position.x += pointer.sx * .35 * sway + Math.sin(t * .35) * .04;
-    camera.position.y += -pointer.sy * .14 * sway + Math.sin(t * .5) * .02;
-    look.x += pointer.sx * .12;
+    const sway = reduced ? 0 : 1 - p * .6;
+    camera.position.x += pointer.sx * .35 * sway + Math.sin(t * .35) * .04 * sway;
+    camera.position.y += -pointer.sy * .14 * sway + Math.sin(t * .5) * .02 * sway;
+    look.x += pointer.sx * .12 * sway;
     camera.lookAt(look);
 
     // breeze in the toran

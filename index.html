@@ -640,11 +640,7 @@ h1, h2, h3, p { margin: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .gate { height: 100vh; }
-  .gate__world, .gate__hint { display: none; }
-  .gate__welcome { opacity: 1; }
-  .gate__beyond img { transform: none; }
-  .gate__toran, .diya__flame { animation: none; }
+  .gate__toran, .diya__flame, .gate__hint::after { animation: none; }
 }
 
 
@@ -1195,10 +1191,6 @@ img.is-missing { opacity: 0; }
     gate.querySelectorAll('.lippan').forEach(function (el) { el.innerHTML = svg; });
   })();
 
-  if (window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
-    document.body.classList.add('past-gate');
-    return;
-  }
 
   var maxScale = 3;
   function measure() {
